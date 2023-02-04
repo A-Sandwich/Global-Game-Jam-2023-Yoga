@@ -9,11 +9,6 @@ CodyTest = {}
 class("CodyTest").extends(NobleScene)
 
 -- It is recommended that you declare, but don't yet define, your scene-specific varibles and methods here. Use "local" where possible.
---
--- local variable1 = nil
--- CodyTest.variable2 = nil
--- ...
---
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
 
@@ -30,7 +25,6 @@ local ruLegJoint
 local rlLegJoint
 local jointSelector
 
-local joints = {}
 local currentJoint
 
 local background
@@ -138,18 +132,6 @@ function CodyTest:enter()
     llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
     ruLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 135, rULegSprite)
     rlLegJoint = Joint(0, 0, 0, 40, ruLegJoint, 90, rLLegSprite)
-
-    joints[1] = uBodyJoint
-    joints[2] = headJoint
-    joints[3] = lBodyJoint
-    joints[4] = luArmJoint
-    joints[5] = llArmJoint
-    joints[6] = ruArmJoint
-    joints[7] = rlArmJoint
-    joints[8] = luLegJoint
-    joints[9] = llLegJoint
-    joints[10] = ruLegJoint
-    joints[11] = rlLegJoint
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()

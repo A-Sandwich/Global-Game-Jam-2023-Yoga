@@ -28,9 +28,10 @@ local luLegJoint
 local llLegJoint
 local ruLegJoint
 local rlLegJoint
+local jointSelector
 
 local joints = {}
-local currentJointIndex
+local currentJoint
 
 local background
 
@@ -113,8 +114,6 @@ function CodyTest:init()
     joints[10] = ruLegJoint
     joints[11] = rlLegJoint
 
-    currentJointIndex = 1
-
     headJoint:updateLocation()
     uBodyJoint:updateLocation()
     lBodyJoint:updateLocation()
@@ -127,7 +126,17 @@ function CodyTest:init()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
 
+
+    jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint, luLegJoint, llLegJoint, ruLegJoint, rlLegJoint)
+    currentJoint = jointSelector:getNextJoint(false, false, false, false)
+    jointSelector:moveTo(currentJoint:getPos())
+    jointSelector:add()
     CodyTest.buildScoringPoints()
+end
+
+function UpdateJointSelector(isUp, isDown, isLeft, isRight)
+    currentJoint = jointSelector:getNextJoint(isUp, isDown, isLeft, isRight)
+    jointSelector:moveTo(currentJoint:getPos())    
 end
 
 function CodyTest.buildScoringPoints()
@@ -236,10 +245,7 @@ CodyTest.inputHandler = {
     -- D-pad left
     --
     leftButtonDown = function()
-        currentJointIndex = currentJointIndex - 1;
-        if currentJointIndex <= 0 then
-            currentJointIndex = #joints
-        end
+        currentJoint = UpdateJointSelector(false, false, true, false)
     end,
     leftButtonHold = function()
         -- Your code here
@@ -251,10 +257,7 @@ CodyTest.inputHandler = {
     -- D-pad right
     --
     rightButtonDown = function()
-        currentJointIndex = currentJointIndex + 1;
-        if currentJointIndex > #joints then
-            currentJointIndex = 1
-        end
+        UpdateJointSelector(false, false, false, true)
     end,
     rightButtonHold = function()
         -- Your code here
@@ -266,7 +269,7 @@ CodyTest.inputHandler = {
     -- D-pad up
     --
     upButtonDown = function()
-        -- Your code here
+        UpdateJointSelector(true, false, false, false)
     end,
     upButtonHold = function()
         -- Your code here
@@ -278,7 +281,7 @@ CodyTest.inputHandler = {
     -- D-pad down
     --
     downButtonDown = function()
-        -- Your code here
+        UpdateJointSelector(false, true, false, false)
     end,
     downButtonHold = function()
         -- Your code here
@@ -290,7 +293,6 @@ CodyTest.inputHandler = {
     -- Crank
     --
     cranked = function(change, acceleratedChange) -- Runs when the crank is rotated. See Playdate SDK documentation for details.
-        local currentJoint = joints[currentJointIndex]
         currentJoint.rot = currentJoint.rot + change
         currentJoint.sprite:setRotation(currentJoint.rot)
 
@@ -305,7 +307,6 @@ CodyTest.inputHandler = {
         llLegJoint:updateLocation()
         ruLegJoint:updateLocation()
         rlLegJoint:updateLocation()
-
     end,
     crankDocked = function() -- Runs once when when crank is docked.
         -- Your code here
@@ -313,4 +314,5 @@ CodyTest.inputHandler = {
     crankUndocked = function() -- Runs once when when crank is undocked.
         -- Your code here
     end
+
 }

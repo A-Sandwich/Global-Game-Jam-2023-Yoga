@@ -1,5 +1,6 @@
 import 'libraries/noble/Noble'
-
+import 'libraries/AnimatedSprite/AnimatedSprite'
+import 'entities/JointWrapper'
 import 'utilities/Utilities'
 
 import 'scenes/ExampleScene'
@@ -8,7 +9,8 @@ import 'scenes/TitleScreen'
 import 'scenes/CodyTest'
 import 'scenes/YogaStudio'
 
-import 'entities/square'
+
+import 'entities/JointSelector'
 import 'entities/Joint'
 import 'entities/ScoringPoint'
 

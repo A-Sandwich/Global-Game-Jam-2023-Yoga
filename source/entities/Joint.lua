@@ -18,6 +18,7 @@ function Joint:init(x, y, rot, rad, parent, attachAngle, sprite)
     self.parent = parent
     self.attachAngle = attachAngle
     self.sprite = sprite
+    self.id = playdate.string.UUID(32)
 end
 
 function Joint:updateLocation()

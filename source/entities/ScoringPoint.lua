@@ -81,5 +81,5 @@ function ScoringPoint:init(x, y, bodyPart, chakras)
 end
 
 function ScoringPoint:drawDebug()
-    playdate.graphics.drawCircleAtPoint(self.x, self.y, 5)
+    Graphics.drawCircleAtPoint(self.x, self.y, 5)
 end

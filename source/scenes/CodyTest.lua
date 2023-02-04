@@ -59,11 +59,11 @@ function CodyTest:init()
     bodySprite:add()
 
     local lBodySprite = gfx.sprite.new(Graphics.image.new("assets/images/lowerbody"))
-    lBodySprite:setCenter(0.5, 0.5)
+    lBodySprite:setCenter(0.5, 0.25)
     lBodySprite:add()
 
     local headSprite = gfx.sprite.new(Graphics.image.new("assets/images/head"))
-    headSprite:setCenter(0.5, 1)
+    headSprite:setCenter(0.5, .75)
     headSprite:add()
 
     local lUArmSprite = gfx.sprite.new(Graphics.image.new("assets/images/leftupperarm"))

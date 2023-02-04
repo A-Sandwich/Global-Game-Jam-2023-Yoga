@@ -2,10 +2,13 @@ import 'libraries/noble/Noble'
 
 import 'utilities/Utilities'
 
+import 'entities/square'
+
 import 'scenes/ExampleScene'
 import 'scenes/ExampleScene2'
 import 'scenes/CodyTest'
 import 'entities/Entity'
+import 'scenes/YogaStudio'
 
 Noble.Settings.setup({
 	Difficulty = "Medium"

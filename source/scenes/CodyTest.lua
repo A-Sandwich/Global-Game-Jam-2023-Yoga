@@ -21,17 +21,17 @@ CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color 
 function CodyTest:init()
     CodyTest.super.init(self)
 
-    local body = Entity(0, 0, 0, 4)
+    local body = Entity(220, 100, 0, 32)
 
-    local head = Entity(0, 0, 0, 1, body, 0)
+    local head = Entity(0, 0, 0, 32, body, 0)
 
-    print(body:getPos())
-    print(head:getPos())
+    torso = Square()
+    realHead = Square()
 
-    body.rot = 45
+    torso:moveTo(body.x, body.y)
 
-    print(body:getPos())
-    print(head:getPos())
+    local hX, hY = head:getPos()
+    realHead:moveTo(hX, hY)
 end
 
 -- When transitioning from another scene, this runs as soon as this scene needs to be visible (this moment depends on which transition type is used).

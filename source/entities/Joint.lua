@@ -40,8 +40,6 @@ function Joint:getPos()
 
     local rads = degToRad(rotOffset)
 
-    print(rads)
-
     local rotX = pRad * math.cos(rads)
     local rotY = pRad * math.sin(rads)
 

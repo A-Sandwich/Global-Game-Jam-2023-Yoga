@@ -32,20 +32,6 @@ local rlLegJoint
 local joints = {}
 local currentJointIndex
 
-local head
-local uBody
-local lBody
-local luArm
-local llArm
-local ruArm
-local rlArm
-local luLeg
-local llLeg
-local ruLeg
-local rlLeg
-
-local gfx = playdate.graphics
-
 local background
 
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
@@ -54,47 +40,51 @@ function CodyTest:init()
 
     background = Graphics.image.new("assets/images/backgrounds/Studio")
 
-    local bodySprite = gfx.sprite.new(Graphics.image.new("assets/images/upperbody"))
+    local torsoImage = Graphics.image.new("assets/images/Torso")
+
+    local bodySprite = Graphics.sprite.new(torsoImage:scaledImage(3))
     bodySprite:setCenter(0.5, 0.5)
     bodySprite:add()
 
-    local lBodySprite = gfx.sprite.new(Graphics.image.new("assets/images/lowerbody"))
+    local lBodySprite = Graphics.sprite.new(torsoImage:scaledImage(2.5))
     lBodySprite:setCenter(0.5, 0.25)
     lBodySprite:add()
 
-    local headSprite = gfx.sprite.new(Graphics.image.new("assets/images/head"))
+    local headSprite = Graphics.sprite.new(Graphics.image.new("assets/images/head"))
     headSprite:setCenter(0.5, .75)
     headSprite:add()
 
-    local lUArmSprite = gfx.sprite.new(Graphics.image.new("assets/images/leftupperarm"))
-    lUArmSprite:setCenter(0.5, 0)
+    local partsImage = Graphics.image.new("assets/images/Parts")
+
+    local lUArmSprite = Graphics.sprite.new(partsImage:scaledImage(1.4))
+    lUArmSprite:setCenter(0.7, 0)
     lUArmSprite:add()
 
-    local lLArmSprite = gfx.sprite.new(Graphics.image.new("assets/images/leftlowerarm"))
+    local lLArmSprite = Graphics.sprite.new(partsImage:scaledImage(1.25))
     lLArmSprite:setCenter(0.5, 0)
     lLArmSprite:add()
 
-    local rUArmSprite = gfx.sprite.new(Graphics.image.new("assets/images/rightupperarm"))
-    rUArmSprite:setCenter(0.5, 0)
+    local rUArmSprite = Graphics.sprite.new(partsImage)
+    rUArmSprite:setCenter(0.4, 0)
     rUArmSprite:add()
 
-    local rLArmSprite = gfx.sprite.new(Graphics.image.new("assets/images/rightlowerarm"))
+    local rLArmSprite = Graphics.sprite.new(partsImage)
     rLArmSprite:setCenter(0.5, 0)
     rLArmSprite:add()
 
-    local lULegSprite = gfx.sprite.new(Graphics.image.new("assets/images/leftupperleg"))
+    local lULegSprite = Graphics.sprite.new(partsImage)
     lULegSprite:setCenter(0.5, 0)
     lULegSprite:add()
 
-    local lLLegSprite = gfx.sprite.new(Graphics.image.new("assets/images/leftlowerleg"))
+    local lLLegSprite = Graphics.sprite.new(partsImage)
     lLLegSprite:setCenter(0.5, 0)
     lLLegSprite:add()
 
-    local rULegSprite = gfx.sprite.new(Graphics.image.new("assets/images/rightupperleg"))
+    local rULegSprite = Graphics.sprite.new(partsImage)
     rULegSprite:setCenter(0.5, 0)
     rULegSprite:add()
 
-    local rLLegSprite = gfx.sprite.new(Graphics.image.new("assets/images/rightlowerleg"))
+    local rLLegSprite = Graphics.sprite.new(partsImage)
     rLLegSprite:setCenter(0.5, 0)
     rLLegSprite:add()
 
@@ -135,6 +125,25 @@ function CodyTest:init()
     llLegJoint:updateLocation()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
+
+    CodyTest.buildScoringPoints()
+end
+
+function CodyTest.buildScoringPoints()
+    -- head
+    ScoringPoints.add(165, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
+    ScoringPoints.add(235, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
+    ScoringPoints.add(200, 30, ScoringPoints.bodyPartType.Head,
+        { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
+    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.Head,
+        { ScoringPoints.chakraTypes.Death });
+
+
+    -- Upper Body
+    --ScoringPoints.add(100, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
+    --ScoringPoints.add(300, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
+
+
 end
 
 -- When transitioning from another scene, this runs as soon as this scene needs to be visible (this moment depends on which transition type is used).
@@ -160,6 +169,10 @@ function CodyTest:drawBackground()
     CodyTest.super.drawBackground(self)
 
     background:draw(0, 0)
+
+    if Noble.showFPS then
+        ScoringPoints.drawDebug()
+    end
 end
 
 -- This runs as as soon as a transition to another scene begins.
@@ -206,6 +219,10 @@ CodyTest.inputHandler = {
     --
     BButtonDown = function()
         -- Your code here
+        local hX, hY = headJoint:getPos()
+        local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
+        printTable(headScore)
+
     end,
     BButtonHeld = function()
         -- Your code here

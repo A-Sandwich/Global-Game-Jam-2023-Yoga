@@ -131,6 +131,7 @@ function CodyTest:init()
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
     CodyTest.buildScoringPoints()
+
 end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)

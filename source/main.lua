@@ -9,7 +9,7 @@ import 'scenes/TitleScreen'
 import 'scenes/CodyTest'
 import 'scenes/YogaStudio'
 
-
+import 'entities/Sparkle'
 import 'entities/JointSelector'
 import 'entities/Joint'
 import 'entities/ScoringPoint'

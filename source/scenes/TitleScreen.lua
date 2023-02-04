@@ -4,12 +4,7 @@ class("TitleScreen").extends(NobleScene)
 TitleScreen.baseColor = Graphics.kColorWhite
 
 local background
-local torso
 local sequence
-
-local beginMenu
-local creditsMenu
-local exitMenu
 
 function TitleScreen:init()
 	TitleScreen.super.init(self)
@@ -24,6 +19,7 @@ function TitleScreen:init()
 		end
 	}
 
+	playdate.sound.sampleplayer.new("assets/sounds/music"):play(0)
 end
 
 function TitleScreen:enter()
@@ -42,8 +38,13 @@ function TitleScreen:drawBackground()
 
 	background:draw(0, 0)
 
-	playdate.graphics.drawText("Press A to Begin Session", 200, 200)
 	playdate.graphics.drawText("Credits", 150, 100)
+	playdate.graphics.drawText("A Sandwich", 175, 125)
+	playdate.graphics.drawText("Cxsquared", 300, 125)
+	playdate.graphics.drawText("Kevin Sanchez", 175, 150)
+	playdate.graphics.drawText("ToastyFish", 300, 150)
+
+	playdate.graphics.drawText("Press A to Begin Session", 150, 200)
 end
 
 function TitleScreen:update()

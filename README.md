@@ -1,4 +1,4 @@
-# Noble Engine: project template
-A starting template for [Noble Engine](https://github.com/NobleRobot/NobleEngine) projects.
+# Global Game Jam 2023 Entry
 
-The engine is included as a submodule for this repository. Be sure to recurse submodules when you clone this repo or use it as a template.
+clone with  git clone --recurse-submodules or run git submodule update --init --recursive --jobs 8 after cloning!
+Run in vscode and build/run with ctrl + shift + b

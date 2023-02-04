@@ -40,13 +40,14 @@ function CodyTest:init()
 
     background = Graphics.image.new("assets/images/backgrounds/Studio")
 
-    local torsoImage = Graphics.image.new("assets/images/Torso")
+    local utorsoImage = Graphics.image.new("assets/images/UpperTorso")
+    local ltorsoImage = Graphics.image.new("assets/images/LowerTorso")
 
-    local bodySprite = Graphics.sprite.new(torsoImage:scaledImage(3))
+    local bodySprite = Graphics.sprite.new(utorsoImage)
     bodySprite:setCenter(0.5, 0.5)
     bodySprite:add()
 
-    local lBodySprite = Graphics.sprite.new(torsoImage:scaledImage(2.5))
+    local lBodySprite = Graphics.sprite.new(ltorsoImage)
     lBodySprite:setCenter(0.5, 0.25)
     lBodySprite:add()
 
@@ -56,16 +57,16 @@ function CodyTest:init()
 
     local partsImage = Graphics.image.new("assets/images/Parts")
 
-    local lUArmSprite = Graphics.sprite.new(partsImage:scaledImage(1.4))
+    local lUArmSprite = Graphics.sprite.new(partsImage)
     lUArmSprite:setCenter(0.7, 0)
     lUArmSprite:add()
 
-    local lLArmSprite = Graphics.sprite.new(partsImage:scaledImage(1.25))
+    local lLArmSprite = Graphics.sprite.new(partsImage)
     lLArmSprite:setCenter(0.5, 0)
     lLArmSprite:add()
 
     local rUArmSprite = Graphics.sprite.new(partsImage)
-    rUArmSprite:setCenter(0.4, 0)
+    rUArmSprite:setCenter(0.3, 0)
     rUArmSprite:add()
 
     local rLArmSprite = Graphics.sprite.new(partsImage)
@@ -91,14 +92,14 @@ function CodyTest:init()
     uBodyJoint = Joint(200, 100, 0, 32, nil, 0, bodySprite)
     lBodyJoint = Joint(0, 0, 0, 24, uBodyJoint, 90, lBodySprite)
     headJoint = Joint(0, 0, 0, 16, uBodyJoint, 270, headSprite)
-    luArmJoint = Joint(0, 0, 0, 48, uBodyJoint, 225, lUArmSprite)
-    llArmJoint = Joint(0, 0, 0, 48, luArmJoint, 90, lLArmSprite)
-    ruArmJoint = Joint(0, 0, 0, 48, uBodyJoint, 315, rUArmSprite)
-    rlArmJoint = Joint(0, 0, 0, 48, ruArmJoint, 90, rLArmSprite)
-    luLegJoint = Joint(0, 0, 0, 48, lBodyJoint, 45, lULegSprite)
-    llLegJoint = Joint(0, 0, 0, 24, luLegJoint, 90, lLLegSprite)
-    ruLegJoint = Joint(0, 0, 0, 48, lBodyJoint, 135, rULegSprite)
-    rlLegJoint = Joint(0, 0, 0, 24, ruLegJoint, 90, rLLegSprite)
+    luArmJoint = Joint(0, 0, 0, 40, uBodyJoint, 225, lUArmSprite)
+    llArmJoint = Joint(0, 0, 0, 40, luArmJoint, 90, lLArmSprite)
+    ruArmJoint = Joint(0, 0, 0, 40, uBodyJoint, 315, rUArmSprite)
+    rlArmJoint = Joint(0, 0, 0, 40, ruArmJoint, 90, rLArmSprite)
+    luLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 45, lULegSprite)
+    llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
+    ruLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 135, rULegSprite)
+    rlLegJoint = Joint(0, 0, 0, 40, ruLegJoint, 90, rLLegSprite)
 
     joints[1] = uBodyJoint
     joints[2] = headJoint
@@ -171,7 +172,7 @@ function CodyTest:drawBackground()
     background:draw(0, 0)
 
     if Noble.showFPS then
-        ScoringPoints.drawDebug()
+        --ScoringPoints.drawDebug()
     end
 end
 

@@ -4,39 +4,22 @@ class("TitleScreen").extends(NobleScene)
 TitleScreen.baseColor = Graphics.kColorWhite
 
 local background
-local torso
 local sequence
 
 function TitleScreen:init()
 	TitleScreen.super.init(self)
 
-	background = Graphics.image.new("assets/images/backgrounds/Logo")
+	background = Graphics.image.new("assets/images/backgrounds/Menu")
 
 	local crankTick = 0
 
 	TitleScreen.inputHandler = {
-		upButtonDown = function()
-			torso:moveTo(torso.x, torso.y - 5)
-		end,
-		downButtonDown = function()
-			torso:moveTo(torso.x, torso.y + 5)
-		end,
-		leftButtonDown = function()
-			torso:moveTo(torso.x - 5, torso.y)
-		end,
-		rightButtonDown = function()
-			torso:moveTo(torso.x + 5, torso.y)
-		end,
-		cranked = function(change, acceleratedChange)
-			crankTick = crankTick + change
-			
-            torso:setRotation(crankTick)
-		end,
 		AButtonDown = function()
-			
+			Noble.transition(CodyTest)
 		end
 	}
 
+	playdate.sound.sampleplayer.new("assets/sounds/music"):play(0)
 end
 
 function TitleScreen:enter()
@@ -54,6 +37,14 @@ function TitleScreen:drawBackground()
 	TitleScreen.super.drawBackground(self)
 
 	background:draw(0, 0)
+
+	playdate.graphics.drawText("Credits", 150, 100)
+	playdate.graphics.drawText("A Sandwich", 175, 125)
+	playdate.graphics.drawText("Cxsquared", 300, 125)
+	playdate.graphics.drawText("Kevin Sanchez", 175, 150)
+	playdate.graphics.drawText("ToastyFish", 300, 150)
+
+	playdate.graphics.drawText("Press A to Begin Session", 150, 200)
 end
 
 function TitleScreen:update()

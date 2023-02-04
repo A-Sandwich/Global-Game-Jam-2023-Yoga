@@ -17,21 +17,42 @@ class("CodyTest").extends(NobleScene)
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
 
+local body
+local head
+local head2
+local torso
+local realHead
+local realHead2
+
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)
 
-    local body = Entity(220, 100, 0, 32)
+    body = Entity(220, 100, 0, 32)
+    head = Entity(0, 0, 0, 16, body, 270)
+    head2 = Entity(0, 0, 0, 16, head, 270)
 
-    local head = Entity(0, 0, 0, 32, body, 0)
+    local headImage = Graphics.image.new("assets/images/head")
+    local bodyImage = Graphics.image.new("assets/images/upperbody")
+    torso = Square(bodyImage)
+    torso:setRotation(body.rot)
+    torso:setCenter(0.5, 0.5)
+    realHead = Square(headImage)
+    realHead:setRotation(head.rot)
 
-    torso = Square()
-    realHead = Square()
+    realHead:setCenter(0.5, 1)
+
+    realHead2 = Square(headImage)
+    realHead2:setRotation(head2.rot)
+
+    realHead2:setCenter(0.5, 1)
 
     torso:moveTo(body.x, body.y)
 
     local hX, hY = head:getPos()
     realHead:moveTo(hX, hY)
+    local hX2, hY2 = head2:getPos()
+    realHead2:moveTo(hX2, hY2)
 end
 
 -- When transitioning from another scene, this runs as soon as this scene needs to be visible (this moment depends on which transition type is used).
@@ -164,7 +185,19 @@ CodyTest.inputHandler = {
     -- Crank
     --
     cranked = function(change, acceleratedChange) -- Runs when the crank is rotated. See Playdate SDK documentation for details.
-        -- Your code here
+        body.rot = body.rot + change
+
+        torso:moveTo(body.x, body.y)
+        torso:setRotation(body.rot)
+
+        head.rot = head.rot - change
+        local hX, hY = head:getPos()
+        realHead:moveTo(hX, hY)
+
+        local hX2, hY2 = head2:getPos()
+        realHead2:moveTo(hX2, hY2)
+
+
     end,
     crankDocked = function() -- Runs once when when crank is docked.
         -- Your code here

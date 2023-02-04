@@ -127,7 +127,8 @@ function CodyTest:init()
     rlLegJoint:updateLocation()
 
 
-    jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint, luLegJoint, llLegJoint, ruLegJoint, rlLegJoint)
+    jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint,
+        luLegJoint, llLegJoint, ruLegJoint, rlLegJoint)
     currentJoint = jointSelector:getNextJoint(false, false, false, false)
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
@@ -136,21 +137,31 @@ end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
     currentJoint = jointSelector:getNextJoint(isUp, isDown, isLeft, isRight)
-    jointSelector:moveTo(currentJoint:getPos())    
+    jointSelector:moveTo(currentJoint:getPos())
 end
 
 function CodyTest.buildScoringPoints()
     -- head
-    ScoringPoints.add(165, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(233, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
-    ScoringPoints.add(197, 30, ScoringPoints.bodyPartType.Head,
+    local headStartX, headStartY = headJoint:getPos()
+    ScoringPoints.add(headStartX - 20, headStartY - 10, ScoringPoints.bodyPartType.Head,
+        { ScoringPoints.chakraTypes.Crown });
+    ScoringPoints.add(headStartY + 20, headStartY - 10, ScoringPoints.bodyPartType.Head,
+        { ScoringPoints.chakraTypes.ThirdEye });
+    ScoringPoints.add(headStartX, headStartY - 20, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(headStartX, headStartY - 100, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.Death });
 
-    -- Upper Body
-    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.ThirdEye });
+    -- upper Body
+    ScoringPoints.add(uBodyJoint.x, uBodyJoint.y, ScoringPoints.bodyPartType.UpperBody,
+        { ScoringPoints.chakraTypes.Heart, ScoringPoints.chakraTypes.Throat });
+
+    -- Lower Body
+    local lowerStartx, lowerStarty = lBodyJoint:getPos()
+    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Solarplexus });
+    ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Sacral });
+    ScoringPoints.add(lowerStartx, lowerStarty, ScoringPoints.bodyPartType.LowerBody,
+        { ScoringPoints.chakraTypes.Sacral });
 
 end
 

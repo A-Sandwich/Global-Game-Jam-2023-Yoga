@@ -10,6 +10,7 @@ import 'scenes/YogaStudio'
 
 import 'entities/square'
 import 'entities/Joint'
+import 'entities/ScoringPoint'
 
 Noble.Settings.setup({
 	Difficulty = "Medium"

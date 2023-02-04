@@ -32,18 +32,6 @@ local rlLegJoint
 local joints = {}
 local currentJointIndex
 
-local head
-local uBody
-local lBody
-local luArm
-local llArm
-local ruArm
-local rlArm
-local luLeg
-local llLeg
-local ruLeg
-local rlLeg
-
 local gfx = playdate.graphics
 
 local background
@@ -135,6 +123,10 @@ function CodyTest:init()
     llLegJoint:updateLocation()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
+
+    ScoringPoints.add(100, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
+    ScoringPoints.add(300, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
+
 end
 
 -- When transitioning from another scene, this runs as soon as this scene needs to be visible (this moment depends on which transition type is used).
@@ -206,6 +198,10 @@ CodyTest.inputHandler = {
     --
     BButtonDown = function()
         -- Your code here
+        local hX, hY = headJoint:getPos()
+        local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
+        printTable(headScore)
+
     end,
     BButtonHeld = function()
         -- Your code here

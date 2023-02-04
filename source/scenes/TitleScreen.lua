@@ -4,12 +4,7 @@ class("TitleScreen").extends(NobleScene)
 TitleScreen.baseColor = Graphics.kColorWhite
 
 local background
-local torso
 local sequence
-
-local beginMenu
-local creditsMenu
-local exitMenu
 
 function TitleScreen:init()
 	TitleScreen.super.init(self)

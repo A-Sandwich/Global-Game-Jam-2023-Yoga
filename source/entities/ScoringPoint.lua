@@ -82,4 +82,5 @@ end
 
 function ScoringPoint:drawDebug()
     Graphics.drawCircleAtPoint(self.x, self.y, 5)
+    Graphics.drawText(self.bodyPart, self.x, self.y)
 end

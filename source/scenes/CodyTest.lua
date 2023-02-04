@@ -124,8 +124,23 @@ function CodyTest:init()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
 
-    ScoringPoints.add(100, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(300, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
+    CodyTest.buildScoringPoints()
+end
+
+function CodyTest.buildScoringPoints()
+    -- head
+    ScoringPoints.add(165, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
+    ScoringPoints.add(235, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
+    ScoringPoints.add(200, 30, ScoringPoints.bodyPartType.Head,
+        { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
+    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.Head,
+        { ScoringPoints.chakraTypes.Death });
+
+
+    -- Upper Body
+    --ScoringPoints.add(100, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
+    --ScoringPoints.add(300, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
+
 
 end
 
@@ -152,6 +167,10 @@ function CodyTest:drawBackground()
     CodyTest.super.drawBackground(self)
 
     background:draw(0, 0)
+
+    if Noble.showFPS then
+        ScoringPoints.drawDebug()
+    end
 end
 
 -- This runs as as soon as a transition to another scene begins.

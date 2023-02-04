@@ -21,7 +21,8 @@ ScoringPoints.chakraTypes = {
     Heart = "Heart",
     Solarplexus = "Solarplexus",
     Sacral = "Sacral",
-    Root = "Root"
+    Root = "Root",
+    Death = "Death"
 }
 
 ScoringPoints.allPoints = {}
@@ -32,6 +33,12 @@ end
 
 function ScoringPoints.add(x, y, bodyPart, chakras)
     ScoringPoints.allPoints[#ScoringPoints.allPoints + 1] = ScoringPoint(x, y, bodyPart, chakras)
+end
+
+function ScoringPoints.drawDebug()
+    for _, v in pairs(ScoringPoints.allPoints) do
+        v:drawDebug()
+    end
 end
 
 function ScoringPoints.getClosestPoint(x, y, bodyPart)
@@ -71,4 +78,8 @@ function ScoringPoint:init(x, y, bodyPart, chakras)
     self.y = y
     self.bodyPart = bodyPart
     self.chakras = chakras
+end
+
+function ScoringPoint:drawDebug()
+    playdate.graphics.drawCircleAtPoint(self.x, self.y, 5)
 end

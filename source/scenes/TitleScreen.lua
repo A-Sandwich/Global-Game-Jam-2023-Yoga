@@ -10,7 +10,7 @@ local sequence
 function TitleScreen:init()
 	TitleScreen.super.init(self)
 
-	background = Graphics.image.new("assets/images/background1")
+	background = Graphics.image.new("assets/images/backgrounds/Logo")
 
 	local crankTick = 0
 
@@ -48,8 +48,6 @@ end
 
 function TitleScreen:start()
 	TitleScreen.super.start(self)
-	Noble.Input.setCrankIndicatorStatus(true)
-
 end
 
 function TitleScreen:drawBackground()
@@ -60,13 +58,11 @@ end
 
 function TitleScreen:update()
 	TitleScreen.super.update(self)	
-	playdate.graphics.drawText("Yoga?", 100, 100, 200, 100)
 end
 
 function TitleScreen:exit()
 	TitleScreen.super.exit(self)
 
-	Noble.Input.setCrankIndicatorStatus(false)
 	sequence = Sequence.new():from(100):to(240, 0.25, Ease.inSine)
 	sequence:start();
 end

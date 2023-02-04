@@ -2,13 +2,14 @@ import 'libraries/noble/Noble'
 
 import 'utilities/Utilities'
 
-import 'entities/square'
-
 import 'scenes/ExampleScene'
 import 'scenes/ExampleScene2'
+import 'scenes/TitleScreen'
 import 'scenes/CodyTest'
-import 'entities/Entity'
 import 'scenes/YogaStudio'
+
+import 'entities/square'
+import 'entities/Entity'
 
 Noble.Settings.setup({
 	Difficulty = "Medium"
@@ -19,5 +20,4 @@ Noble.GameData.setup({
 })
 
 Noble.showFPS = true
-
-Noble.new(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
+Noble.new(YogaStudio, 1.5, Noble.TransitionType.CROSS_DISSOLVE)

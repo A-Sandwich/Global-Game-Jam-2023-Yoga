@@ -182,6 +182,7 @@ end
 function CodyTest:exit()
     CodyTest.super.exit(self)
     -- Your code here
+    Noble.Input.setCrankIndicatorStatus(false)
 end
 
 -- This runs once a transition to another scene completes.
@@ -206,7 +207,7 @@ CodyTest.inputHandler = {
     -- A button
     --
     AButtonDown = function() -- Runs once when button is pressed.
-        -- Your code here
+        Noble.Input.setCrankIndicatorStatus(true)
     end,
     AButtonHold = function() -- Runs every frame while the player is holding button down.
         -- Your code here

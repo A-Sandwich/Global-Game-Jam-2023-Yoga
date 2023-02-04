@@ -20,4 +20,4 @@ Noble.GameData.setup({
 })
 
 Noble.showFPS = true
-Noble.new(TitleScreen, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
+Noble.new(YogaStudio, 1.5, Noble.TransitionType.CROSS_DISSOLVE)

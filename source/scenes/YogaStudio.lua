@@ -10,7 +10,7 @@ local sequence
 function YogaStudio:init()
 	YogaStudio.super.init(self)
 
-	background = Graphics.image.new("assets/images/background1")
+	background = Graphics.image.new("assets/images/backgrounds/Studio")
 	torso = Square()
 
 	local crankTick = 0

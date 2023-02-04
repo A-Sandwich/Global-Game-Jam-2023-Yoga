@@ -1,4 +1,4 @@
-Entity = {
+Joint = {
     x = 0,
     y = 0,
     rot = 0,
@@ -7,18 +7,28 @@ Entity = {
     attachAngle = 0
 }
 
-class("Entity").extends()
+class("Joint").extends(playdate.graphics.sprite)
 
-function Entity:init(x, y, rot, rad, parent, attachAngle)
+function Joint:init(x, y, rot, rad, parent, attachAngle, sprite)
+    Joint.super.init(self)
     self.rot = rot
     self.rad = rad
     self.x = x
     self.y = y
     self.parent = parent
     self.attachAngle = attachAngle
+    self.sprite = sprite
 end
 
-function Entity:getPos()
+function Joint:updateLocation()
+    local x, y = self:getPos()
+
+    if self.sprite ~= nil then
+        self.sprite:moveTo(x, y)
+    end
+end
+
+function Joint:getPos()
     if self.parent == nil then
         return self.x, self.y
     end

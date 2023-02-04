@@ -6,6 +6,7 @@ import 'entities/square'
 
 import 'scenes/ExampleScene'
 import 'scenes/ExampleScene2'
+import 'scenes/TitleScreen'
 import 'scenes/YogaStudio'
 
 
@@ -19,4 +20,4 @@ Noble.GameData.setup({
 
 Noble.showFPS = true
 
-Noble.new(YogaStudio, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
+Noble.new(TitleScreen, 1.5, Noble.TransitionType.CROSS_DISSOLVE)

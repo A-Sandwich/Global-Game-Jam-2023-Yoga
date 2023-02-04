@@ -1,21 +1,20 @@
-YogaStudio = {}
-class("YogaStudio").extends(NobleScene)
+TitleScreen = {}
+class("TitleScreen").extends(NobleScene)
 
-YogaStudio.baseColor = Graphics.kColorWhite
+TitleScreen.baseColor = Graphics.kColorWhite
 
 local background
 local torso
 local sequence
 
-function YogaStudio:init()
-	YogaStudio.super.init(self)
+function TitleScreen:init()
+	TitleScreen.super.init(self)
 
 	background = Graphics.image.new("assets/images/background1")
-	torso = Square()
 
 	local crankTick = 0
 
-	YogaStudio.inputHandler = {
+	TitleScreen.inputHandler = {
 		upButtonDown = function()
 			torso:moveTo(torso.x, torso.y - 5)
 		end,
@@ -40,37 +39,38 @@ function YogaStudio:init()
 
 end
 
-function YogaStudio:enter()
-	YogaStudio.super.enter(self)
+function TitleScreen:enter()
+	TitleScreen.super.enter(self)
 
 	sequence = Sequence.new():from(0):to(100, 1.5, Ease.outBounce)
 	sequence:start();
 end
 
-function YogaStudio:start()
-	YogaStudio.super.start(self)
+function TitleScreen:start()
+	TitleScreen.super.start(self)
 	Noble.Input.setCrankIndicatorStatus(true)
 
 end
 
-function YogaStudio:drawBackground()
-	YogaStudio.super.drawBackground(self)
+function TitleScreen:drawBackground()
+	TitleScreen.super.drawBackground(self)
 
 	background:draw(0, 0)
 end
 
-function YogaStudio:update()
-	YogaStudio.super.update(self)	
+function TitleScreen:update()
+	TitleScreen.super.update(self)	
+	playdate.graphics.drawText("Yoga?", 100, 100, 200, 100)
 end
 
-function YogaStudio:exit()
-	YogaStudio.super.exit(self)
+function TitleScreen:exit()
+	TitleScreen.super.exit(self)
 
 	Noble.Input.setCrankIndicatorStatus(false)
 	sequence = Sequence.new():from(100):to(240, 0.25, Ease.inSine)
 	sequence:start();
 end
 
-function YogaStudio:finish()
-	YogaStudio.super.finish(self)
+function TitleScreen:finish()
+	TitleScreen.super.finish(self)
 end

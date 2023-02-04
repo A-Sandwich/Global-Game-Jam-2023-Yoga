@@ -133,17 +133,15 @@ end
 function CodyTest.buildScoringPoints()
     -- head
     ScoringPoints.add(165, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(235, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
-    ScoringPoints.add(200, 30, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(233, 50, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
+    ScoringPoints.add(197, 30, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
     ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.Death });
 
-
     -- Upper Body
-    --ScoringPoints.add(100, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.Crown });
-    --ScoringPoints.add(300, 100, ScoringPoints.bodyPartType.Head, { ScoringPoints.chakraTypes.ThirdEye });
-
+    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Crown });
+    ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.ThirdEye });
 
 end
 
@@ -172,7 +170,7 @@ function CodyTest:drawBackground()
     background:draw(0, 0)
 
     if Noble.showFPS then
-        --ScoringPoints.drawDebug()
+        ScoringPoints.drawDebug()
     end
 end
 

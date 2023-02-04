@@ -145,25 +145,25 @@ end
 function CodyTest.buildScoringPoints()
     -- head
     local headStartX, headStartY = headJoint:getPos()
-    ScoringPoints.add(headStartX - 20, headStartY - 10, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(headStartX - 40, headStartY - 10, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(headStartY + 20, headStartY - 10, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(headStartX + 40, headStartY - 10, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye });
-    ScoringPoints.add(headStartX, headStartY - 20, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(headStartX, headStartY - 30, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(headStartX, headStartY - 100, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(headStartX, headStartY + 80, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.Death });
 
     -- upper Body
-    ScoringPoints.add(uBodyJoint.x, uBodyJoint.y, ScoringPoints.bodyPartType.UpperBody,
-        { ScoringPoints.chakraTypes.Heart, ScoringPoints.chakraTypes.Throat });
+    --ScoringPoints.add(uBodyJoint.x, uBodyJoint.y, ScoringPoints.bodyPartType.UpperBody,
+    --    { ScoringPoints.chakraTypes.Heart, ScoringPoints.chakraTypes.Throat });
 
     -- Lower Body
     local lowerStartx, lowerStarty = lBodyJoint:getPos()
-    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Solarplexus });
-    ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Sacral });
-    ScoringPoints.add(lowerStartx, lowerStarty, ScoringPoints.bodyPartType.LowerBody,
-        { ScoringPoints.chakraTypes.Sacral });
+    --ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Solarplexus });
+    --ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Sacral });
+    --ScoringPoints.add(lowerStartx, lowerStarty, ScoringPoints.bodyPartType.LowerBody,
+    --    { ScoringPoints.chakraTypes.Sacral });
 
 end
 

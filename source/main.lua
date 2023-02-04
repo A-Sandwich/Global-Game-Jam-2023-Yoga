@@ -22,5 +22,5 @@ Noble.GameData.setup({
 	Score = 0
 })
 
-Noble.showFPS = true
+Noble.showFPS = false
 Noble.new(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)

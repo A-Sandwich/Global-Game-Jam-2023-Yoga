@@ -2,7 +2,7 @@ class('JointSelector').extends(AnimatedSprite)
 
 
 function JointSelector:init(torso, head, hip, leftShoulder, leftArm, rightShoulder, rightArm, rightUpperLeg, rightLowerLeg, leftUpperLeg, leftLowerLeg)
-    self.imgTable = playdate.graphics.imagetable.new("assets/images/rootChakra-sheet-table-32-32")
+    self.imgTable = playdate.graphics.imagetable.new("assets/images/rootChakra-table-32-32")
     JointSelector.super.init(self, self.imgTable) -- this is critical
     
     -- Adding custom a animation state (Optional)

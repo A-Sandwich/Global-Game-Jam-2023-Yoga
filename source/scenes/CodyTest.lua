@@ -46,9 +46,13 @@ local rlLeg
 
 local gfx = playdate.graphics
 
+local background
+
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)
+
+    background = Graphics.image.new("assets/images/backgrounds/Studio")
 
     local bodySprite = gfx.sprite.new(Graphics.image.new("assets/images/upperbody"))
     bodySprite:setCenter(0.5, 0.5)
@@ -154,7 +158,8 @@ end
 -- This runs once per frame, and is meant for drawing code.
 function CodyTest:drawBackground()
     CodyTest.super.drawBackground(self)
-    -- Your code here
+
+    background:draw(0, 0)
 end
 
 -- This runs as as soon as a transition to another scene begins.
@@ -215,7 +220,10 @@ CodyTest.inputHandler = {
     -- D-pad left
     --
     leftButtonDown = function()
-        -- Your code here
+        currentJointIndex = currentJointIndex - 1;
+        if currentJointIndex <= 0 then
+            currentJointIndex = #joints
+        end
     end,
     leftButtonHold = function()
         -- Your code here
@@ -227,7 +235,10 @@ CodyTest.inputHandler = {
     -- D-pad right
     --
     rightButtonDown = function()
-        -- Your code here
+        currentJointIndex = currentJointIndex + 1;
+        if currentJointIndex > #joints then
+            currentJointIndex = 1
+        end
     end,
     rightButtonHold = function()
         -- Your code here

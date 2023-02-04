@@ -133,6 +133,8 @@ function CodyTest:init()
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
     CodyTest.buildScoringPoints()
+
+
 end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
@@ -256,7 +258,7 @@ CodyTest.inputHandler = {
     -- D-pad left
     --
     leftButtonDown = function()
-        currentJoint = UpdateJointSelector(false, false, true, false)
+        UpdateJointSelector(false, false, true, false)
     end,
     leftButtonHold = function()
         -- Your code here

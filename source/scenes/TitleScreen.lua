@@ -38,11 +38,11 @@ function TitleScreen:drawBackground()
 
 	background:draw(0, 0)
 
-	playdate.graphics.drawText("Credits", 150, 100)
-	playdate.graphics.drawText("A Sandwich", 175, 125)
-	playdate.graphics.drawText("Cxsquared", 300, 125)
-	playdate.graphics.drawText("Kevin Sanchez", 175, 150)
-	playdate.graphics.drawText("ToastyFish", 300, 150)
+	playdate.graphics.drawText("Credits", 140, 100)
+	playdate.graphics.drawText("Cxsquared", 150, 125)
+	playdate.graphics.drawText("Kevin Sanchez", 275, 125)
+	playdate.graphics.drawText("Kyle Burkholder", 150, 150)
+	playdate.graphics.drawText("ToastyFish", 275, 150)
 
 	playdate.graphics.drawText("Press A to Begin Session", 150, 200)
 end

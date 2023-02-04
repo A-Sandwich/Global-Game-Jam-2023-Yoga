@@ -177,6 +177,7 @@ end
 function CodyTest:start()
     CodyTest.super.start(self)
     -- Your code here
+    Noble.Input.setCrankIndicatorStatus(true)
 end
 
 -- This runs once per frame.
@@ -200,6 +201,7 @@ end
 function CodyTest:exit()
     CodyTest.super.exit(self)
     -- Your code here
+    Noble.Input.setCrankIndicatorStatus(true)
 end
 
 -- This runs once a transition to another scene completes.

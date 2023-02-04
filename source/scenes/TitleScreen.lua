@@ -19,6 +19,7 @@ function TitleScreen:init()
 		end
 	}
 
+	playdate.sound.sampleplayer.new("assets/sounds/music"):play(0)
 end
 
 function TitleScreen:enter()

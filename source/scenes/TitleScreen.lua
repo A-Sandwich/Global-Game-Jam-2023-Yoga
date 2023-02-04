@@ -7,33 +7,20 @@ local background
 local torso
 local sequence
 
+local beginMenu
+local creditsMenu
+local exitMenu
+
 function TitleScreen:init()
 	TitleScreen.super.init(self)
 
-	background = Graphics.image.new("assets/images/backgrounds/Logo")
+	background = Graphics.image.new("assets/images/backgrounds/Menu")
 
 	local crankTick = 0
 
 	TitleScreen.inputHandler = {
-		upButtonDown = function()
-			torso:moveTo(torso.x, torso.y - 5)
-		end,
-		downButtonDown = function()
-			torso:moveTo(torso.x, torso.y + 5)
-		end,
-		leftButtonDown = function()
-			torso:moveTo(torso.x - 5, torso.y)
-		end,
-		rightButtonDown = function()
-			torso:moveTo(torso.x + 5, torso.y)
-		end,
-		cranked = function(change, acceleratedChange)
-			crankTick = crankTick + change
-			
-            torso:setRotation(crankTick)
-		end,
 		AButtonDown = function()
-			
+			Noble.transition(CodyTest)
 		end
 	}
 
@@ -54,6 +41,9 @@ function TitleScreen:drawBackground()
 	TitleScreen.super.drawBackground(self)
 
 	background:draw(0, 0)
+
+	playdate.graphics.drawText("Press A to Begin Session", 200, 200)
+	playdate.graphics.drawText("Credits", 150, 100)
 end
 
 function TitleScreen:update()

@@ -48,13 +48,19 @@ local easingFunc = playdate.easingFunctions.inQuad
 local numberOfStars
 local poster
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
-
+local shakeScreen
 local customerNumber = 1
 local customerCount = 2
+local isDevil
+local screenShakeMin
+local screenShakeMax
 
 function CodyTest:init()
     CodyTest.super.init(self)
-
+    isDevil = false
+    screenShakeMin = 1
+    screenShakeMax = 10
+    shakeScreen = false
     background = Graphics.image.new("assets/images/backgrounds/Studio")
     poster = Graphics.image.new("assets/images/Poster")
     playdate.resetElapsedTime()
@@ -365,6 +371,10 @@ function CodyTest:update()
         local y = fiveStarAnimation:currentValue()
         fiveStar:moveTo(fiveStar.x, y)
     end
+
+    if shakeScreen then
+        shake()   
+    end
 end
 
 local sparkels = {}
@@ -466,6 +476,7 @@ function CodyTest.updateSparkle()
 end
 
 function CodyTest.checkDevil()
+    if isDevil then return end
     local devilChecksPassed = 0
 
     local hX, hY = headJoint:getPos()
@@ -511,7 +522,14 @@ function CodyTest.checkDevil()
         headJoint.sprite = devilHeadSprite
         devilHeadSprite:add()
         headJoint:updateLocation()
+        shakeScreen = true
+        isDevil = true
+        playdate.timer.new(5000, endShake)
     end
+end
+
+function endShake()
+    screenShakeMax = 0
 end
 
 -- This runs once per frame, and is meant for drawing code.
@@ -533,6 +551,12 @@ function CodyTest:drawBackground()
     if Noble.showFPS then
         ScoringPoints.drawDebug()
     end
+end
+
+function shake()
+    local x = screenShakeMin + math.random() * screenShakeMax
+    local y = screenShakeMin + math.random() * screenShakeMax
+    playdate.display.setOffset(x, y)
 end
 
 -- This runs as as soon as a transition to another scene begins.

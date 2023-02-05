@@ -9,6 +9,11 @@ CodyTest = {}
 class("CodyTest").extends(NobleScene)
 
 -- It is recommended that you declare, but don't yet define, your scene-specific varibles and methods here. Use "local" where possible.
+--
+-- local variable1 = nil
+-- CodyTest.variable2 = nil
+-- ...
+--
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
 
@@ -24,24 +29,40 @@ local llLegJoint
 local ruLegJoint
 local rlLegJoint
 local jointSelector
+local confirm
 
+local joints = {}
 local currentJoint
 
 local background
+local handleInput = true
 
 local spinSinceLastCrack = 0
 local lastCrunchPlayed = 1
+local hasEnoughTimePassed = true
+local crunchDelay = 5
 
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)
 
     background = Graphics.image.new("assets/images/backgrounds/Studio")
+    playdate.resetElapsedTime()
+
 end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
     currentJoint = jointSelector:getNextJoint(isUp, isDown, isLeft, isRight)
-    jointSelector:moveTo(currentJoint:getPos())
+    if currentJoint == confirm then
+        jointSelector:moveTo(currentJoint.sprite.x, currentJoint.sprite.y - currentJoint.sprite.height)
+    else
+        jointSelector:moveTo(currentJoint:getPos())
+    end
+end
+
+function endGame()
+    print("End game")
+    handleInput = false
 end
 
 function CodyTest.buildScoringPoints()
@@ -86,6 +107,10 @@ function CodyTest:enter()
     local headSprite = Graphics.sprite.new(Graphics.image.new("assets/images/head"))
     headSprite:setCenter(0.5, .75)
     headSprite:add()
+
+    local confirmSprite = Graphics.sprite.new(Graphics.image.new("assets/images/NonConfirmState"))
+    confirmSprite:setCenter(0.5, 1.4)
+    confirmSprite:add()
 
     local partsImage = Graphics.image.new("assets/images/Parts")
 
@@ -132,6 +157,7 @@ function CodyTest:enter()
     llLegJoint = Joint(0, 0, math.random() * 360, 40, luLegJoint, 90, lLLegSprite)
     ruLegJoint = Joint(0, 0, math.random() * 360, 40, lBodyJoint, 135, rULegSprite)
     rlLegJoint = Joint(0, 0, math.random() * 360, 40, ruLegJoint, 90, rLLegSprite)
+    confirm = Joint(0, 0, 0, 16, headJoint, 270, confirmSprite)
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()
@@ -144,13 +170,19 @@ function CodyTest:enter()
     llLegJoint:updateLocation()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
+    confirm:updateLocation()
+
 
     jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint,
-        luLegJoint, llLegJoint, ruLegJoint, rlLegJoint)
+        luLegJoint, llLegJoint, ruLegJoint, rlLegJoint, confirm)
     currentJoint = jointSelector:getNextJoint(false, false, false, false)
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
     CodyTest.buildScoringPoints()
+
+    playdate.timer.performAfterDelay(5000, function()
+        hasEnoughTimePassed = true
+    end)
 end
 
 -- This runs once a transition from another scene is complete.
@@ -235,7 +267,12 @@ CodyTest.inputHandler = {
     -- A button
     --
     AButtonDown = function() -- Runs once when button is pressed.
-        Noble.Input.setCrankIndicatorStatus(true)
+        if not handleInput then return end
+        if currentJoint == confirm then
+            endGame()
+        else
+            Noble.Input.setCrankIndicatorStatus(true)
+        end
     end,
     AButtonHold = function() -- Runs every frame while the player is holding button down.
         -- Your code here
@@ -250,6 +287,7 @@ CodyTest.inputHandler = {
     -- B button
     --
     BButtonDown = function()
+        if not handleInput then return end
         -- Your code here
         local hX, hY = headJoint:getPos()
         local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
@@ -269,6 +307,7 @@ CodyTest.inputHandler = {
     -- D-pad left
     --
     leftButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(false, false, true, false)
     end,
     leftButtonHold = function()
@@ -281,6 +320,7 @@ CodyTest.inputHandler = {
     -- D-pad right
     --
     rightButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(false, false, false, true)
     end,
     rightButtonHold = function()
@@ -293,6 +333,7 @@ CodyTest.inputHandler = {
     -- D-pad up
     --
     upButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(true, false, false, false)
     end,
     upButtonHold = function()
@@ -305,6 +346,7 @@ CodyTest.inputHandler = {
     -- D-pad down
     --
     downButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(false, true, false, false)
     end,
     downButtonHold = function()
@@ -317,6 +359,7 @@ CodyTest.inputHandler = {
     -- Crank
     --
     cranked = function(change, acceleratedChange) -- Runs when the crank is rotated. See Playdate SDK documentation for details.
+        if not handleInput then return end
         currentJoint.rot = currentJoint.rot + change
         currentJoint.sprite:setRotation(currentJoint.rot)
 
@@ -331,7 +374,7 @@ CodyTest.inputHandler = {
         llLegJoint:updateLocation()
         ruLegJoint:updateLocation()
         rlLegJoint:updateLocation()
-
+        confirm:updateLocation()
         manageCracks(change)
     end,
     crankDocked = function() -- Runs once when when crank is docked.
@@ -346,8 +389,12 @@ CodyTest.inputHandler = {
 function manageCracks(change)
     spinSinceLastCrack += change
 
-    if (spinSinceLastCrack > 750) then
+    if (spinSinceLastCrack > 750 and hasEnoughTimePassed == true) then
+        hasEnoughTimePassed = false
         spinSinceLastCrack = 0
+        playdate.timer.performAfterDelay(5000, function()
+            hasEnoughTimePassed = true
+        end)
         playdate.sound.sampleplayer.new("assets/sounds/bone_crunch_" .. lastCrunchPlayed):play()
         lastCrunchPlayed = lastCrunchPlayed + 1
         if (lastCrunchPlayed > 4) then

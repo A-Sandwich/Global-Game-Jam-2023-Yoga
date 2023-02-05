@@ -16,7 +16,8 @@ class("CodyTest").extends(NobleScene)
 --
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
-
+local geo = playdate.geometry
+local Animator = playdate.graphics.animator
 local headJoint
 local uBodyJoint
 local lBodyJoint
@@ -30,6 +31,7 @@ local ruLegJoint
 local rlLegJoint
 local jointSelector
 local confirm
+local bounceInTime = 750
 
 local joints = {}
 local currentJoint
@@ -42,6 +44,17 @@ local lastCrunchPlayed = 1
 local hasEnoughTimePassed = true
 local crunchDelay = 5
 
+local rootChakra
+local twoStar
+local threeStar
+local fourStar 
+local fiveStar
+local rootChakraAnimation
+local twoStarAnimation
+local threeStarAnimation
+local fourStarAnimation
+local fiveStarAnimation
+local easingFunc = playdate.easingFunctions.inQuad
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)
@@ -64,6 +77,7 @@ function endGame()
     playdate.sound.sampleplayer.new("assets/sounds/sparkle"):play()
     print("End game")
     handleInput = false
+    showStats()
 end
 
 function CodyTest.buildScoringPoints()
@@ -184,6 +198,45 @@ function CodyTest:enter()
     end)
 end
 
+function showStats()
+    rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
+    
+    rootChakra:moveTo(56, 240)
+    rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+    rootChakra:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show2Star })
+    rootChakra:playAnimation()
+end
+
+function show2Star()
+    twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
+    twoStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+    twoStar:moveTo(120, 225)
+    twoStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show3Star })
+    twoStar:playAnimation()
+end
+
+function show3Star()
+    threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
+    threeStar:moveTo(184, 225)
+    threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+    threeStar:addState('idle', 1, 16, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
+    threeStar:playAnimation()
+end
+function show4Star()
+    fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
+    fourStar:moveTo(248, 225)
+    fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+    fourStar:addState('idle', 1, 10, { tickStep = 1, loop = false, onLoopFinishedEvent = show5Star })
+    fourStar:playAnimation()
+end
+function show5Star()
+    fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
+    fiveStar:moveTo(312, 225)
+    fiveStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+    fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })
+    fiveStar:playAnimation()
+end
+-- 400 x 240
 -- This runs once a transition from another scene is complete.
 function CodyTest:start()
     CodyTest.super.start(self)
@@ -196,6 +249,30 @@ function CodyTest:update()
     -- Your code here
 
     CodyTest.updateSparkle()
+    if rootChakraAnimation then
+        local y = rootChakraAnimation:currentValue()
+        rootChakra:moveTo(rootChakra.x, y)
+    end
+
+    if twoStarAnimation then
+        local y = twoStarAnimation:currentValue()
+        twoStar:moveTo(twoStar.x, y)
+    end
+
+    if threeStarAnimation then
+        local y = threeStarAnimation:currentValue()
+        threeStar:moveTo(threeStar.x, y)
+    end
+
+    if fourStarAnimation then
+        local y = fourStarAnimation:currentValue()
+        fourStar:moveTo(fourStar.x, y)
+    end
+
+    if fiveStarAnimation then
+        local y = fiveStarAnimation:currentValue()
+        fiveStar:moveTo(fiveStar.x, y)
+    end
 end
 
 local sparkels = {}

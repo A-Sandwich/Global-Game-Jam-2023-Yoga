@@ -208,6 +208,12 @@ function onSparkleFinish(key)
     sparkels[key] = nil
 end
 
+local canSparkle = true
+
+function getSparkleDelay()
+    return 500 + math.random() * 1000
+end
+
 function CodyTest.updateSparkle()
     local randDist = math.random() * 32
     local randRad = math.random() * 2 * math.pi;
@@ -218,13 +224,43 @@ function CodyTest.updateSparkle()
     local hX, hY = headJoint:getPos()
     local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
 
-    if headScore.distanceFromBodyPart < sparkleDistance and sparkels["head"] == nil then
+    if canSparkle and headScore.distanceFromBodyPart < sparkleDistance and sparkels["head"] == nil then
+        canSparkle = false
         local spark = Sparkle(onSparkleFinish, "head")
         spark:moveTo(headScore.x + randX, headScore.y + randY)
         sparkels["head"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
     end
 
+    -- left arm
+    local laX, laY = headJoint:getPos()
+    local leftArmScore = ScoringPoints.getClosestPoint(laX, laY, ScoringPoints.bodyPartType.LeftLowerArm)
 
+    if canSparkle and leftArmScore.distanceFromBodyPart < sparkleDistance and sparkels["leftarm"] == nil then
+        canSparkle = false
+        local spark = Sparkle(onSparkleFinish, "leftarm")
+        spark:moveTo(leftArmScore.x + randX, leftArmScore.y + randY)
+        sparkels["leftarm"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
+    end
+
+    -- right arm
+    local raX, raY = headJoint:getPos()
+    local rightArmScore = ScoringPoints.getClosestPoint(raX, raY, ScoringPoints.bodyPartType.RightLowerArm)
+
+    if canSparkle and rightArmScore.distanceFromBodyPart < sparkleDistance and sparkels["rightarm"] == nil then
+        canSparkle = false
+        local spark = Sparkle(onSparkleFinish, "rightarm")
+        spark:moveTo(rightArmScore.x + randX, rightArmScore.y + randY)
+        sparkels["rightarm"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
+    end
 end
 
 -- This runs once per frame, and is meant for drawing code.

@@ -44,6 +44,7 @@ local twoStarAnimation
 local threeStarAnimation
 local fourStarAnimation
 local fiveStarAnimation
+local devilHeadAnimation
 local easingFunc = playdate.easingFunctions.inQuad
 local numberOfStars
 local poster
@@ -372,8 +373,16 @@ function CodyTest:update()
         fiveStar:moveTo(fiveStar.x, y)
     end
 
+    if devilHeadAnimation ~= nil then
+        headJoint.rot = devilHeadAnimation:currentValue()
+        headJoint.sprite:setRotation(headJoint.rot)
+        if devilHeadAnimation:ended() then
+            devilHeadAnimation = nil
+        end
+    end
+
     if shakeScreen then
-        shake()   
+        shake()
     end
 end
 
@@ -522,9 +531,11 @@ function CodyTest.checkDevil()
         headJoint.sprite = devilHeadSprite
         devilHeadSprite:add()
         headJoint:updateLocation()
+        headJoint.rot = 0
         shakeScreen = true
         isDevil = true
         playdate.timer.new(5000, endShake)
+        devilHeadAnimation = Animator.new(bounceInTime, headJoint.rot, 180, easingFunc)
     end
 end
 
@@ -631,7 +642,7 @@ CodyTest.inputHandler = {
     -- A button
     --
     AButtonDown = function() -- Runs once when button is pressed.
-        
+
     end,
 
     crankDocked = function()
@@ -644,7 +655,7 @@ CodyTest.inputHandler = {
             Noble.transition(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
             return
         end
-    end,	
+    end,
 
     -- B button
     --

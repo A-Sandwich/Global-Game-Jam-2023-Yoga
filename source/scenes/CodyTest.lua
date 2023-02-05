@@ -49,6 +49,9 @@ local easingFunc = playdate.easingFunctions.inQuad
 local numberOfStars = 0.0
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 
+local customerNumber = 1
+local customerCount = 2
+
 function CodyTest:init()
     CodyTest.super.init(self)
 
@@ -62,6 +65,10 @@ function CodyTest:init()
     bounceInTime = 750
     sparkels = {}
     canSparkle = true
+
+    if Noble.showFPS then
+        customerNumber = 3
+    end
 end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
@@ -78,40 +85,84 @@ function endGame()
     print("End game")
     handleInput = false
     showStats()
+    updateCustomerNumber()
+end
+
+function updateCustomerNumber()
+    customerNumber = customerNumber + 1
+    if customerNumber > customerCount then
+        customerNumber = 1
+    end
 end
 
 function CodyTest.buildScoringPoints()
     -- standard
-    ScoringPoints.add(240, 60, ScoringPoints.bodyPartType.Head,
-        { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
+    if customerNumber == 1 then 
+        ScoringPoints.add(240, 60, ScoringPoints.bodyPartType.Head,
+            { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
 
-    ScoringPoints.add(230, 45, ScoringPoints.bodyPartType.LeftLowerArm,
-        { ScoringPoints.chakraTypes.Throat });
+        ScoringPoints.add(230, 45, ScoringPoints.bodyPartType.LeftLowerArm,
+            { ScoringPoints.chakraTypes.Throat });
 
-    ScoringPoints.add(260, 125, ScoringPoints.bodyPartType.RightLowerArm,
-        { ScoringPoints.chakraTypes.Throat });
+        ScoringPoints.add(260, 125, ScoringPoints.bodyPartType.RightLowerArm,
+            { ScoringPoints.chakraTypes.Throat });
 
-    ScoringPoints.add(150, 195, ScoringPoints.bodyPartType.RightLowerLeg,
-        { ScoringPoints.chakraTypes.Throat });
+        ScoringPoints.add(150, 195, ScoringPoints.bodyPartType.RightLowerLeg,
+            { ScoringPoints.chakraTypes.Throat });
 
-    ScoringPoints.add(220, 145, ScoringPoints.bodyPartType.LeftLowerLeg,
-        { ScoringPoints.chakraTypes.Throat });
+        ScoringPoints.add(220, 145, ScoringPoints.bodyPartType.LeftLowerLeg,
+            { ScoringPoints.chakraTypes.Throat });
+    elseif customerNumber == 2 then
+        ScoringPoints.add(210, 60, ScoringPoints.bodyPartType.Head,
+            { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
+
+        ScoringPoints.add(150, 70, ScoringPoints.bodyPartType.LeftLowerArm,
+            { ScoringPoints.chakraTypes.Throat });
+
+        ScoringPoints.add(250, 70, ScoringPoints.bodyPartType.RightLowerArm,
+            { ScoringPoints.chakraTypes.Throat });
+
+        ScoringPoints.add(140, 150, ScoringPoints.bodyPartType.RightLowerLeg,
+            { ScoringPoints.chakraTypes.Throat });
+
+        ScoringPoints.add(255, 160, ScoringPoints.bodyPartType.LeftLowerLeg,
+            { ScoringPoints.chakraTypes.Throat });
+        elseif customerNumber == 3 then
+            ScoringPoints.add(168, 100, ScoringPoints.bodyPartType.Head,
+                { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
+    
+            ScoringPoints.add(175, 150, ScoringPoints.bodyPartType.LeftLowerArm,
+                { ScoringPoints.chakraTypes.Throat });
+    
+            ScoringPoints.add(175, 40, ScoringPoints.bodyPartType.RightLowerArm,
+                { ScoringPoints.chakraTypes.Throat });
+    
+            ScoringPoints.add(245, 40, ScoringPoints.bodyPartType.LeftLowerLeg,
+                { ScoringPoints.chakraTypes.Throat });
+    
+            ScoringPoints.add(245, 150, ScoringPoints.bodyPartType.RightLowerLeg,
+                { ScoringPoints.chakraTypes.Throat });
+    end
+
 
     -- devil
-    ScoringPoints.add(200, 132, ScoringPoints.bodyPartType.Head,
-        { ScoringPoints.chakraTypes.Death });
 
-    ScoringPoints.add(253, 149, ScoringPoints.bodyPartType.LeftLowerArm,
-        { ScoringPoints.chakraTypes.Death });
+    if not Noble.showFPS then
+        ScoringPoints.add(200, 132, ScoringPoints.bodyPartType.Head,
+            { ScoringPoints.chakraTypes.Death });
 
-    ScoringPoints.add(153, 154, ScoringPoints.bodyPartType.RightLowerArm,
-        { ScoringPoints.chakraTypes.Death });
+        ScoringPoints.add(253, 149, ScoringPoints.bodyPartType.LeftLowerArm,
+            { ScoringPoints.chakraTypes.Death });
 
-    ScoringPoints.add(250, 29, ScoringPoints.bodyPartType.RightLowerLeg,
-        { ScoringPoints.chakraTypes.Death });
+        ScoringPoints.add(153, 154, ScoringPoints.bodyPartType.RightLowerArm,
+            { ScoringPoints.chakraTypes.Death });
 
-    ScoringPoints.add(154, 22, ScoringPoints.bodyPartType.LeftLowerLeg,
-        { ScoringPoints.chakraTypes.Death });
+        ScoringPoints.add(250, 29, ScoringPoints.bodyPartType.RightLowerLeg,
+            { ScoringPoints.chakraTypes.Death });
+
+        ScoringPoints.add(154, 22, ScoringPoints.bodyPartType.LeftLowerLeg,
+            { ScoringPoints.chakraTypes.Death });
+    end
 
 end
 
@@ -171,17 +222,32 @@ function CodyTest:enter()
     rLLegSprite:setCenter(0.5, 0)
     rLLegSprite:add()
 
-    uBodyJoint = Joint(200, 100, 0, 32, nil, 0, bodySprite)
-    lBodyJoint = Joint(0, 0, 0, 24, uBodyJoint, 90, lBodySprite)
-    headJoint = Joint(0, 0, 0, 16, uBodyJoint, 270, headSprite)
-    luArmJoint = Joint(0, 0, 260, 40, uBodyJoint, 225, lUArmSprite)
-    llArmJoint = Joint(0, 0, 280, 40, luArmJoint, 90, lLArmSprite)
-    ruArmJoint = Joint(0, 0, 270, 40, uBodyJoint, 315, rUArmSprite)
-    rlArmJoint = Joint(0, 0, 270, 40, ruArmJoint, 90, rLArmSprite)
-    luLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 45, lULegSprite)
-    llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
-    ruLegJoint = Joint(0, 0, 270, 40, lBodyJoint, 135, rULegSprite)
-    rlLegJoint = Joint(0, 0, 30, 40, ruLegJoint, 90, rLLegSprite)
+    if customerNumber == 1 then
+        uBodyJoint = Joint(200, 100, 0, 32, nil, 0, bodySprite)
+        lBodyJoint = Joint(0, 0, 0, 24, uBodyJoint, 90, lBodySprite)
+        headJoint = Joint(0, 0, 0, 16, uBodyJoint, 270, headSprite)
+        luArmJoint = Joint(0, 0, 260, 40, uBodyJoint, 225, lUArmSprite)
+        llArmJoint = Joint(0, 0, 280, 40, luArmJoint, 90, lLArmSprite)
+        ruArmJoint = Joint(0, 0, 270, 40, uBodyJoint, 315, rUArmSprite)
+        rlArmJoint = Joint(0, 0, 270, 40, ruArmJoint, 90, rLArmSprite)
+        luLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 45, lULegSprite)
+        llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
+        ruLegJoint = Joint(0, 0, 270, 40, lBodyJoint, 135, rULegSprite)
+        rlLegJoint = Joint(0, 0, 30, 40, ruLegJoint, 90, rLLegSprite)
+    else
+        uBodyJoint = Joint(200, 100, 0, 32, nil, 0, bodySprite)
+        lBodyJoint = Joint(0, 0, 0, 24, uBodyJoint, 90, lBodySprite)
+        headJoint = Joint(0, 0, 0, 16, uBodyJoint, 270, headSprite)
+        luArmJoint = Joint(0, 0, 0, 40, uBodyJoint, 225, lUArmSprite)
+        llArmJoint = Joint(0, 0, 0, 40, luArmJoint, 90, lLArmSprite)
+        ruArmJoint = Joint(0, 0, 0, 40, uBodyJoint, 315, rUArmSprite)
+        rlArmJoint = Joint(0, 0, 0, 40, ruArmJoint, 90, rLArmSprite)
+        luLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 45, lULegSprite)
+        llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
+        ruLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 135, rULegSprite)
+        rlLegJoint = Joint(0, 0, 0, 40, ruLegJoint, 90, rLLegSprite)
+    end
+
     confirm = Joint(200, 50, 0, 16, nil, 0, confirmSprite)
     confirm.isConfirm = true
 

@@ -74,6 +74,7 @@ function JointSelector:init(torso, head, hip, leftShoulder, leftArm, rightShould
     self.currentJoint = self.torso
 end
 
+
 function JointSelector:getNextJoint(isUp, isDown, isLeft, isRight)
     
     if isUp and self.currentJoint:getUpJoint() ~= nil then

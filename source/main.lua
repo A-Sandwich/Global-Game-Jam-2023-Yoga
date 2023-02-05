@@ -1,3 +1,4 @@
+import 'CoreLibs/animator'
 import 'libraries/noble/Noble'
 import 'libraries/AnimatedSprite/AnimatedSprite'
 import 'entities/JointWrapper'

@@ -61,18 +61,20 @@ function UpdateJointSelector(isUp, isDown, isLeft, isRight)
 end
 
 function endGame()
+    playdate.sound.sampleplayer.new("assets/sounds/sparkle"):play()
+    print("End game")
     handleInput = false
 end
 
 function CodyTest.buildScoringPoints()
     -- head
-    ScoringPoints.add(220, 40, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(240, 60, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
 
     --ScoringPoints.add(headStartX, headStartY + 80, ScoringPoints.bodyPartType.Head,
     --     { ScoringPoints.chakraTypes.Death });
 
-    ScoringPoints.add(140, 75, ScoringPoints.bodyPartType.LeftLowerArm,
+    ScoringPoints.add(230, 45, ScoringPoints.bodyPartType.LeftLowerArm,
         { ScoringPoints.chakraTypes.Throat });
 
     ScoringPoints.add(260, 125, ScoringPoints.bodyPartType.RightLowerArm,
@@ -81,7 +83,7 @@ function CodyTest.buildScoringPoints()
     ScoringPoints.add(150, 195, ScoringPoints.bodyPartType.RightLowerLeg,
         { ScoringPoints.chakraTypes.Throat });
 
-    ScoringPoints.add(250, 175, ScoringPoints.bodyPartType.LeftLowerLeg,
+    ScoringPoints.add(220, 145, ScoringPoints.bodyPartType.LeftLowerLeg,
         { ScoringPoints.chakraTypes.Throat });
 
 end
@@ -170,7 +172,6 @@ function CodyTest:enter()
     rlLegJoint:updateLocation()
     confirm:updateLocation()
 
-
     jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint,
         luLegJoint, llLegJoint, ruLegJoint, rlLegJoint, confirm)
     currentJoint = jointSelector:getNextJoint(false, false, false, false)
@@ -197,8 +198,6 @@ function CodyTest:update()
     CodyTest.updateSparkle()
 end
 
-local sparkleDistance = 30
-local partDistance = 35
 local sparkels = {}
 sparkels["head"] = nil
 
@@ -210,20 +209,22 @@ end
 local canSparkle = true
 
 function getSparkleDelay()
-    return 500 + math.random() * 1000
+    return 250 + math.random() * 500
 end
 
 function CodyTest.updateSparkle()
-    local randDist = math.random() * 32
+    local randDist = math.random() * 16
     local randRad = math.random() * 2 * math.pi;
     local randX = math.sin(randRad) * randDist
     local randY = math.cos(randRad) * randDist
+
+    local randomNum = math.random()
 
     -- head
     local hX, hY = headJoint:getPos()
     local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
 
-    if canSparkle and headScore.distanceFromBodyPart < sparkleDistance and sparkels["head"] == nil then
+    if randomNum < 1 / 5 and canSparkle and headScore.distanceFromBodyPart < 40 and sparkels["head"] == nil then
         canSparkle = false
         local spark = Sparkle(onSparkleFinish, "head")
         spark:moveTo(headScore.x + randX, headScore.y + randY)
@@ -237,8 +238,7 @@ function CodyTest.updateSparkle()
     local laX, laY = llArmJoint:getPos()
     local leftArmScore = ScoringPoints.getClosestPoint(laX, laY, ScoringPoints.bodyPartType.LeftLowerArm)
 
-
-    if canSparkle and leftArmScore.distanceFromBodyPart < 8 and sparkels["leftarm"] == nil then
+    if randomNum < 2 / 5 and canSparkle and leftArmScore.distanceFromBodyPart < 18 and sparkels["leftarm"] == nil then
         canSparkle = false
         local spark = Sparkle(onSparkleFinish, "leftarm")
         spark:moveTo(leftArmScore.x + randX, leftArmScore.y + randY)
@@ -252,7 +252,7 @@ function CodyTest.updateSparkle()
     local raX, raY = rlArmJoint:getPos()
     local rightArmScore = ScoringPoints.getClosestPoint(raX, raY, ScoringPoints.bodyPartType.RightLowerArm)
 
-    if canSparkle and rightArmScore.distanceFromBodyPart < 23 and sparkels["rightarm"] == nil then
+    if randomNum < 3 / 5 and canSparkle and rightArmScore.distanceFromBodyPart < 18 and sparkels["rightarm"] == nil then
         canSparkle = false
         local spark = Sparkle(onSparkleFinish, "rightarm")
         spark:moveTo(rightArmScore.x + randX, rightArmScore.y + randY)
@@ -266,7 +266,7 @@ function CodyTest.updateSparkle()
     local llX, llY = llLegJoint:getPos()
     local leftLegScore = ScoringPoints.getClosestPoint(llX, llY, ScoringPoints.bodyPartType.LeftLowerLeg)
 
-    if canSparkle and leftLegScore.distanceFromBodyPart < 9 and sparkels["leftleg"] == nil then
+    if randomNum < 4 / 5 and canSparkle and leftLegScore.distanceFromBodyPart < 12 and sparkels["leftleg"] == nil then
         canSparkle = false
         local spark = Sparkle(onSparkleFinish, "leftleg")
         spark:moveTo(leftLegScore.x + randX, leftLegScore.y + randY)

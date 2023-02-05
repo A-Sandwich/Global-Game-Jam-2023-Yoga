@@ -157,7 +157,7 @@ function CodyTest:enter()
     llLegJoint = Joint(0, 0, math.random() * 360, 40, luLegJoint, 90, lLLegSprite)
     ruLegJoint = Joint(0, 0, math.random() * 360, 40, lBodyJoint, 135, rULegSprite)
     rlLegJoint = Joint(0, 0, math.random() * 360, 40, ruLegJoint, 90, rLLegSprite)
-    confirm = Joint(0, 0, 0, 16, headJoint, 270, confirmSprite)
+    confirm = Joint(200, 50, 0, 16, nil, 0, confirmSprite)
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()

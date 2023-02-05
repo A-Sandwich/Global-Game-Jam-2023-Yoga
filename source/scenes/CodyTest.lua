@@ -208,6 +208,7 @@ end
 
 function showStats()
     numberOfStars = playdate.getElapsedTime() / 24
+    print("Number of stars" .. numberOfStars)
     if numberOfStars >= 0 then
         rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
         playdate.sound.sampleplayer.new("assets/sounds/end_01"):play()
@@ -220,7 +221,7 @@ function showStats()
 end
 
 function show2Star()
-    if numberOfStars > 0 then
+    if numberOfStars >= 1 then
         twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
         playdate.sound.sampleplayer.new("assets/sounds/end_02"):play()
 
@@ -232,7 +233,7 @@ function show2Star()
 end
 
 function show3Star()
-    if numberOfStars > 1 then
+    if numberOfStars >= 2 then
         threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
         playdate.sound.sampleplayer.new("assets/sounds/end_03"):play()
 
@@ -244,7 +245,7 @@ function show3Star()
 end
 
 function show4Star()
-    if numberOfStars > 2 then
+    if numberOfStars >= 3 then
         fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
         playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
 
@@ -256,7 +257,7 @@ function show4Star()
 end
 
 function show5Star()
-    if numberOfStars > 3 then
+    if numberOfStars >= 4 then
         fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
         playdate.sound.sampleplayer.new("assets/sounds/end_05"):play()
 
@@ -500,7 +501,10 @@ CodyTest.inputHandler = {
     -- A button
     --
     AButtonDown = function() -- Runs once when button is pressed.
-        if not handleInput then return end
+        if not handleInput then
+            print("Reset")
+            Noble.transition(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
+             return end
         if currentJoint == confirm then
             endGame()
         end

@@ -74,6 +74,7 @@ function UpdateJointSelector(isUp, isDown, isLeft, isRight)
 end
 
 function endGame()
+    playdate.sound.sampleplayer.new("assets/sounds/sparkle"):play()
     print("End game")
     handleInput = false
     showStats()
@@ -81,23 +82,22 @@ end
 
 function CodyTest.buildScoringPoints()
     -- head
-    local headStartX, headStartY = headJoint:getPos()
-    ScoringPoints.add(210, 40, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(240, 60, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
 
     --ScoringPoints.add(headStartX, headStartY + 80, ScoringPoints.bodyPartType.Head,
     --     { ScoringPoints.chakraTypes.Death });
 
-    ScoringPoints.add(100, 75, ScoringPoints.bodyPartType.LeftLowerArm,
+    ScoringPoints.add(230, 45, ScoringPoints.bodyPartType.LeftLowerArm,
         { ScoringPoints.chakraTypes.Throat });
 
-    ScoringPoints.add(300, 65, ScoringPoints.bodyPartType.RightLowerArm,
+    ScoringPoints.add(260, 125, ScoringPoints.bodyPartType.RightLowerArm,
         { ScoringPoints.chakraTypes.Throat });
 
-    ScoringPoints.add(130, 195, ScoringPoints.bodyPartType.LeftLowerLeg,
+    ScoringPoints.add(150, 195, ScoringPoints.bodyPartType.RightLowerLeg,
         { ScoringPoints.chakraTypes.Throat });
 
-    ScoringPoints.add(270, 175, ScoringPoints.bodyPartType.RightLowerLeg,
+    ScoringPoints.add(220, 145, ScoringPoints.bodyPartType.LeftLowerLeg,
         { ScoringPoints.chakraTypes.Throat });
 
 end
@@ -160,17 +160,17 @@ function CodyTest:enter()
     rLLegSprite:setCenter(0.5, 0)
     rLLegSprite:add()
 
-    uBodyJoint = Joint(200, 100, math.random() * 360, 32, nil, 0, bodySprite)
-    lBodyJoint = Joint(0, 0, math.random() * 360, 24, uBodyJoint, 90, lBodySprite)
-    headJoint = Joint(0, 0, math.random() * 360, 16, uBodyJoint, 270, headSprite)
-    luArmJoint = Joint(0, 0, math.random() * 360, 40, uBodyJoint, 225, lUArmSprite)
-    llArmJoint = Joint(0, 0, math.random() * 360, 40, luArmJoint, 90, lLArmSprite)
-    ruArmJoint = Joint(0, 0, math.random() * 360, 40, uBodyJoint, 315, rUArmSprite)
-    rlArmJoint = Joint(0, 0, math.random() * 360, 40, ruArmJoint, 90, rLArmSprite)
-    luLegJoint = Joint(0, 0, math.random() * 360, 40, lBodyJoint, 45, lULegSprite)
-    llLegJoint = Joint(0, 0, math.random() * 360, 40, luLegJoint, 90, lLLegSprite)
-    ruLegJoint = Joint(0, 0, math.random() * 360, 40, lBodyJoint, 135, rULegSprite)
-    rlLegJoint = Joint(0, 0, math.random() * 360, 40, ruLegJoint, 90, rLLegSprite)
+    uBodyJoint = Joint(200, 100, 0, 32, nil, 0, bodySprite)
+    lBodyJoint = Joint(0, 0, 0, 24, uBodyJoint, 90, lBodySprite)
+    headJoint = Joint(0, 0, 0, 16, uBodyJoint, 270, headSprite)
+    luArmJoint = Joint(0, 0, 260, 40, uBodyJoint, 225, lUArmSprite)
+    llArmJoint = Joint(0, 0, 280, 40, luArmJoint, 90, lLArmSprite)
+    ruArmJoint = Joint(0, 0, 270, 40, uBodyJoint, 315, rUArmSprite)
+    rlArmJoint = Joint(0, 0, 270, 40, ruArmJoint, 90, rLArmSprite)
+    luLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 45, lULegSprite)
+    llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
+    ruLegJoint = Joint(0, 0, 270, 40, lBodyJoint, 135, rULegSprite)
+    rlLegJoint = Joint(0, 0, 30, 40, ruLegJoint, 90, rLLegSprite)
     confirm = Joint(200, 50, 0, 16, nil, 0, confirmSprite)
 
     headJoint:updateLocation()
@@ -185,7 +185,6 @@ function CodyTest:enter()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
     confirm:updateLocation()
-
 
     jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint,
         luLegJoint, llLegJoint, ruLegJoint, rlLegJoint, confirm)
@@ -276,7 +275,6 @@ function CodyTest:update()
     end
 end
 
-local sparkleDistance = 30
 local sparkels = {}
 sparkels["head"] = nil
 
@@ -285,22 +283,89 @@ function onSparkleFinish(key)
     sparkels[key] = nil
 end
 
+local canSparkle = true
+
+function getSparkleDelay()
+    return 250 + math.random() * 500
+end
+
 function CodyTest.updateSparkle()
-    local randDist = math.random() * 32
+    local randDist = math.random() * 16
     local randRad = math.random() * 2 * math.pi;
     local randX = math.sin(randRad) * randDist
     local randY = math.cos(randRad) * randDist
+
+    local randomNum = math.random()
 
     -- head
     local hX, hY = headJoint:getPos()
     local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
 
-    if headScore.distanceFromBodyPart < sparkleDistance and sparkels["head"] == nil then
+    if randomNum < 1 / 5 and canSparkle and headScore.distanceFromBodyPart < 40 and sparkels["head"] == nil then
+        canSparkle = false
         local spark = Sparkle(onSparkleFinish, "head")
         spark:moveTo(headScore.x + randX, headScore.y + randY)
         sparkels["head"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
     end
 
+    -- left arm
+    local laX, laY = llArmJoint:getPos()
+    local leftArmScore = ScoringPoints.getClosestPoint(laX, laY, ScoringPoints.bodyPartType.LeftLowerArm)
+
+    if randomNum < 2 / 5 and canSparkle and leftArmScore.distanceFromBodyPart < 18 and sparkels["leftarm"] == nil then
+        canSparkle = false
+        local spark = Sparkle(onSparkleFinish, "leftarm")
+        spark:moveTo(leftArmScore.x + randX, leftArmScore.y + randY)
+        sparkels["leftarm"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
+    end
+
+    -- right arm
+    local raX, raY = rlArmJoint:getPos()
+    local rightArmScore = ScoringPoints.getClosestPoint(raX, raY, ScoringPoints.bodyPartType.RightLowerArm)
+
+    if randomNum < 3 / 5 and canSparkle and rightArmScore.distanceFromBodyPart < 18 and sparkels["rightarm"] == nil then
+        canSparkle = false
+        local spark = Sparkle(onSparkleFinish, "rightarm")
+        spark:moveTo(rightArmScore.x + randX, rightArmScore.y + randY)
+        sparkels["rightarm"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
+    end
+
+    -- left arm
+    local llX, llY = llLegJoint:getPos()
+    local leftLegScore = ScoringPoints.getClosestPoint(llX, llY, ScoringPoints.bodyPartType.LeftLowerLeg)
+
+    if randomNum < 4 / 5 and canSparkle and leftLegScore.distanceFromBodyPart < 12 and sparkels["leftleg"] == nil then
+        canSparkle = false
+        local spark = Sparkle(onSparkleFinish, "leftleg")
+        spark:moveTo(leftLegScore.x + randX, leftLegScore.y + randY)
+        sparkels["leftleg"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
+    end
+
+    -- right leg
+    local rlX, rlY = rlLegJoint:getPos()
+    local rightLegScore = ScoringPoints.getClosestPoint(rlX, rlY, ScoringPoints.bodyPartType.RightLowerLeg)
+
+    if canSparkle and rightLegScore.distanceFromBodyPart < 23 and sparkels["rightleg"] == nil then
+        canSparkle = false
+        local spark = Sparkle(onSparkleFinish, "rightleg")
+        spark:moveTo(rightLegScore.x + randX, rightLegScore.y + randY)
+        sparkels["rightleg"] = spark
+        playdate.timer.performAfterDelay(getSparkleDelay(), function()
+            canSparkle = true
+        end)
+    end
 
 end
 
@@ -368,7 +433,6 @@ CodyTest.inputHandler = {
         -- Your code here
         local hX, hY = headJoint:getPos()
         local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
-        printTable(headScore)
 
     end,
     BButtonHeld = function()

@@ -37,6 +37,9 @@ local currentJoint
 local background
 local handleInput = true
 
+local spinSinceLastCrack = 0
+local lastCrunchPlayed = 1
+
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)
@@ -189,7 +192,6 @@ function CodyTest:enter()
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
     CodyTest.buildScoringPoints()
-
 end
 
 -- This runs once a transition from another scene is complete.
@@ -353,6 +355,7 @@ CodyTest.inputHandler = {
         ruLegJoint:updateLocation()
         rlLegJoint:updateLocation()
         confirm:updateLocation()
+        manageCracks(change)
     end,
     crankDocked = function() -- Runs once when when crank is docked.
         -- Your code here
@@ -362,3 +365,16 @@ CodyTest.inputHandler = {
     end
 
 }
+
+function manageCracks(change)
+    spinSinceLastCrack += change
+
+    if(spinSinceLastCrack > 750) then
+        spinSinceLastCrack = 0
+        playdate.sound.sampleplayer.new("assets/sounds/bone_crunch_" .. lastCrunchPlayed):play()
+        lastCrunchPlayed = lastCrunchPlayed + 1
+        if(lastCrunchPlayed > 4) then
+            lastCrunchPlayed = 1
+        end
+    end 
+end

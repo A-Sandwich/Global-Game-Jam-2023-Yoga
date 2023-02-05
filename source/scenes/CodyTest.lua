@@ -9,11 +9,6 @@ CodyTest = {}
 class("CodyTest").extends(NobleScene)
 
 -- It is recommended that you declare, but don't yet define, your scene-specific varibles and methods here. Use "local" where possible.
---
--- local variable1 = nil
--- CodyTest.variable2 = nil
--- ...
---
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
 local Animator = playdate.graphics.animator
@@ -53,12 +48,20 @@ local fiveStarAnimation
 local easingFunc = playdate.easingFunctions.inQuad
 local numberOfStars = 0.0
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
+
 function CodyTest:init()
     CodyTest.super.init(self)
 
     background = Graphics.image.new("assets/images/backgrounds/Studio")
     playdate.resetElapsedTime()
 
+    handleInput = true
+    numberOfStars = 0.0
+    lastCrunchPlayed = 1
+    hasEnoughTimePassed = false
+    bounceInTime = 750
+    sparkels = {}
+    canSparkle = true
 end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
@@ -281,34 +284,33 @@ function CodyTest:update()
     CodyTest.updateSparkle()
     CodyTest.checkDevil()
 
-    if rootChakraAnimation then
+    if rootChakraAnimation and rootChakra ~= nil then
         local y = rootChakraAnimation:currentValue()
         rootChakra:moveTo(rootChakra.x, y)
     end
 
-    if twoStarAnimation then
+    if twoStarAnimation and twoStar ~= nil then
         local y = twoStarAnimation:currentValue()
         twoStar:moveTo(twoStar.x, y)
     end
 
-    if threeStarAnimation then
+    if threeStarAnimation and threeStar ~= nil then
         local y = threeStarAnimation:currentValue()
         threeStar:moveTo(threeStar.x, y)
     end
 
-    if fourStarAnimation then
+    if fourStarAnimation and fourStar ~= nil then
         local y = fourStarAnimation:currentValue()
         fourStar:moveTo(fourStar.x, y)
     end
 
-    if fiveStarAnimation then
+    if fiveStarAnimation and fiveStar ~= nil then
         local y = fiveStarAnimation:currentValue()
         fiveStar:moveTo(fiveStar.x, y)
     end
 end
 
 local sparkels = {}
-sparkels["head"] = nil
 
 function onSparkleFinish(key)
     NobleScene:removeSprite(sparkels[key])
@@ -471,6 +473,36 @@ end
 function CodyTest:finish()
     CodyTest.super.finish(self)
 
+    if rootChakra ~= nil then
+        rootChakra:remove()
+        rootChakra = nil
+    end
+
+    if twoStar ~= nil then
+        twoStar:remove()
+        twoStar = nil
+    end
+
+    if threeStar ~= nil then
+        threeStar:remove()
+        threeStar = nil
+    end
+
+    if fourStar ~= nil then
+        fourStar:remove()
+        fourStar = nil
+    end
+
+    if fiveStar ~= nil then
+        fiveStar:remove()
+        fiveStar = nil
+    end
+
+    if jointSelector ~= nil then
+        jointSelector:remove()
+        jointSelector = nil
+    end
+
     currentJoint = nil
     headJoint = nil
     uBodyJoint = nil
@@ -504,7 +536,8 @@ CodyTest.inputHandler = {
         if not handleInput then
             print("Reset")
             Noble.transition(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
-             return end
+            return
+        end
         if currentJoint == confirm then
             endGame()
         end

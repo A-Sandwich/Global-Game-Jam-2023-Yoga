@@ -24,9 +24,8 @@ local llLegJoint
 local ruLegJoint
 local rlLegJoint
 local jointSelector
-local confirm
 local bounceInTime = 750
-
+local startHeight = 220
 local currentJoint
 
 local background
@@ -46,7 +45,7 @@ local threeStarAnimation
 local fourStarAnimation
 local fiveStarAnimation
 local easingFunc = playdate.easingFunctions.inQuad
-local numberOfStars = 0.0
+local numberOfStars
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 
 local customerNumber = 1
@@ -73,14 +72,11 @@ end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
     currentJoint = jointSelector:getNextJoint(isUp, isDown, isLeft, isRight)
-    if currentJoint == confirm then
-        jointSelector:moveTo(currentJoint.sprite.x, currentJoint.sprite.y - currentJoint.sprite.height)
-    else
-        jointSelector:moveTo(currentJoint:getPos())
-    end
+    jointSelector:moveTo(currentJoint:getPos())
 end
 
 function endGame()
+    Noble.Input.setCrankIndicatorStatus(false)
     playdate.sound.sampleplayer.new("assets/sounds/sparkle"):play()
     print("End game")
     handleInput = false
@@ -186,10 +182,6 @@ function CodyTest:enter()
     headSprite:setCenter(0.5, .75)
     headSprite:add()
 
-    local confirmSprite = NobleSprite("assets/images/NonConfirmState")
-    confirmSprite:setCenter(0.5, 1.4)
-    confirmSprite:add()
-
     local lUArmSprite = NobleSprite("assets/images/Parts")
     lUArmSprite:setCenter(0.7, 0)
     lUArmSprite:add()
@@ -262,10 +254,9 @@ function CodyTest:enter()
     llLegJoint:updateLocation()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
-    confirm:updateLocation()
 
     jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint,
-        luLegJoint, llLegJoint, ruLegJoint, rlLegJoint, confirm)
+        luLegJoint, llLegJoint, ruLegJoint, rlLegJoint)
     currentJoint = jointSelector:getNextJoint(false, false, false, false)
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
@@ -284,7 +275,7 @@ function showStats()
         playdate.sound.sampleplayer.new("assets/sounds/end_01"):play()
 
         rootChakra:moveTo(56, 240)
-        rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        rootChakraAnimation = Animator.new(bounceInTime, 240, startHeight, easingFunc)
         rootChakra:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show2Star })
         rootChakra:playAnimation()
     end
@@ -295,8 +286,8 @@ function show2Star()
         twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
         playdate.sound.sampleplayer.new("assets/sounds/end_02"):play()
 
-        twoStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-        twoStar:moveTo(120, 225)
+        twoStarAnimation = Animator.new(bounceInTime, 240, startHeight, easingFunc)
+        twoStar:moveTo(120, 240)
         twoStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show3Star })
         twoStar:playAnimation()
     end
@@ -307,8 +298,8 @@ function show3Star()
         threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
         playdate.sound.sampleplayer.new("assets/sounds/end_03"):play()
 
-        threeStar:moveTo(184, 225)
-        threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        threeStar:moveTo(184, 240)
+        threeStarAnimation = Animator.new(bounceInTime, 240, startHeight, easingFunc)
         threeStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
         threeStar:playAnimation()
     end
@@ -319,8 +310,8 @@ function show4Star()
         fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
         playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
 
-        fourStar:moveTo(248, 225)
-        fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        fourStar:moveTo(248, 240)
+        fourStarAnimation = Animator.new(bounceInTime, 240, startHeight, easingFunc)
         fourStar:addState('idle', 1, 10, { tickStep = 2, loop = false, onLoopFinishedEvent = show5Star })
         fourStar:playAnimation()
     end
@@ -331,8 +322,8 @@ function show5Star()
         fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
         playdate.sound.sampleplayer.new("assets/sounds/end_05"):play()
 
-        fiveStar:moveTo(312, 225)
-        fiveStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        fiveStar:moveTo(312, 240)
+        fiveStarAnimation = Animator.new(bounceInTime, 240, startHeight, easingFunc)
         fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })
         fiveStar:playAnimation()
     end
@@ -514,7 +505,13 @@ function CodyTest.checkDevil()
     end
 
     if devilChecksPassed >= 5 then
-        print("devil cleared")
+        headJoint.sprite:remove()
+        local devilHeadSprite = NobleSprite("assets/images/DemonPose")
+        devilHeadSprite:setCenter(0.5, .75)
+        devilHeadSprite:setZIndex(-1)
+        headJoint.sprite = devilHeadSprite
+        devilHeadSprite:add()
+        headJoint:updateLocation()
     end
 end
 
@@ -605,9 +602,10 @@ CodyTest.inputHandler = {
             Noble.transition(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
             return
         end
-        if currentJoint == confirm then
-            endGame()
-        end
+    end,
+
+    crankDocked = function()
+        endGame()
     end,
 
     -- B button
@@ -683,7 +681,6 @@ CodyTest.inputHandler = {
         llLegJoint:updateLocation()
         ruLegJoint:updateLocation()
         rlLegJoint:updateLocation()
-        confirm:updateLocation()
         manageCracks()
     end,
 }

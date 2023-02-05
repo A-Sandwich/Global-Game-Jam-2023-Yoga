@@ -47,12 +47,14 @@ local fourStarAnimation
 local fiveStarAnimation
 local easingFunc = playdate.easingFunctions.inQuad
 local numberOfStars = 0.0
+local poster
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 
 function CodyTest:init()
     CodyTest.super.init(self)
 
     background = Graphics.image.new("assets/images/backgrounds/Studio")
+    poster = Graphics.image.new("assets/images/Poster")
     playdate.resetElapsedTime()
 
     handleInput = true
@@ -457,6 +459,16 @@ function CodyTest:drawBackground()
     CodyTest.super.drawBackground(self)
 
     background:draw(0, 0)
+
+    poster:draw(30, 50)
+
+    if handleInput then
+        Noble.Text.draw("Dock🎣", 43, 53)
+        Noble.Text.draw("Wwhen\nFinished", 62, 106, Noble.Text.ALIGN_CENTER, false, Noble.Text.FONT_SMALL)
+    else
+        Noble.Text.draw("Undock🎣", 43, 53)
+        Noble.Text.draw("To\nContinue", 62, 106, Noble.Text.ALIGN_CENTER, false, Noble.Text.FONT_SMALL)
+    end
 
     if Noble.showFPS then
         ScoringPoints.drawDebug()

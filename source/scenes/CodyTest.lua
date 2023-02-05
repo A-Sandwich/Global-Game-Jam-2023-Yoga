@@ -191,6 +191,7 @@ end
 
 function showStats()
     rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
+    playdate.sound.sampleplayer.new("assets/sounds/end_01"):play()
 
     rootChakra:moveTo(56, 240)
     rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
@@ -200,6 +201,8 @@ end
 
 function show2Star()
     twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
+    playdate.sound.sampleplayer.new("assets/sounds/end_02"):play()
+
     twoStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
     twoStar:moveTo(120, 225)
     twoStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show3Star })
@@ -208,6 +211,8 @@ end
 
 function show3Star()
     threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
+    playdate.sound.sampleplayer.new("assets/sounds/end_03"):play()
+
     threeStar:moveTo(184, 225)
     threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
     threeStar:addState('idle', 1, 16, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
@@ -216,6 +221,8 @@ end
 
 function show4Star()
     fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
+    playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
+
     fourStar:moveTo(248, 225)
     fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
     fourStar:addState('idle', 1, 10, { tickStep = 1, loop = false, onLoopFinishedEvent = show5Star })
@@ -224,6 +231,8 @@ end
 
 function show5Star()
     fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
+    playdate.sound.sampleplayer.new("assets/sounds/end_05"):play()
+
     fiveStar:moveTo(312, 225)
     fiveStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
     fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })

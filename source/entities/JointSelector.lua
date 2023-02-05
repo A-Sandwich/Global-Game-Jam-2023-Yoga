@@ -1,7 +1,7 @@
 class('JointSelector').extends(AnimatedSprite)
 
 
-function JointSelector:init(torso, head, hip, leftShoulder, leftArm, rightShoulder, rightArm, rightUpperLeg, rightLowerLeg, leftUpperLeg, leftLowerLeg, confirm)
+function JointSelector:init(torso, head, hip, leftShoulder, leftArm, rightShoulder, rightArm, rightUpperLeg, rightLowerLeg, leftUpperLeg, leftLowerLeg)
     self.imgTable = playdate.graphics.imagetable.new("assets/images/rootChakra-table-32-32")
     JointSelector.super.init(self, self.imgTable) -- this is critical
     
@@ -13,8 +13,6 @@ function JointSelector:init(torso, head, hip, leftShoulder, leftArm, rightShould
     self:setCenter(0.5, 0.5)
     self.torso = JointWrapper(torso, nil, nil, nil, nil)
     self.head = JointWrapper(head, nil, self.torso, nil, nil)
-    self.confirm = JointWrapper(confirm, nil, self.head, nil, nil)
-    self.head:setUpJoint(self.confirm)
     self.hip = JointWrapper(hip, self.torso, nil, nil, nil)
     self.leftArm = {
         JointWrapper(leftShoulder, nil, nil, nil, self.torso),

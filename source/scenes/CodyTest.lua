@@ -39,10 +39,8 @@ local currentJoint
 local background
 local handleInput = true
 
-local spinSinceLastCrack = 0
 local lastCrunchPlayed = 1
-local hasEnoughTimePassed = true
-local crunchDelay = 5
+local hasEnoughTimePassed = false
 
 local rootChakra
 local twoStar
@@ -289,6 +287,10 @@ function getSparkleDelay()
     return 250 + math.random() * 500
 end
 
+function getCrunchDelay()
+    return 5000 + math.random() * 2000
+end
+
 function CodyTest.updateSparkle()
     local randDist = math.random() * 16
     local randRad = math.random() * 2 * math.pi;
@@ -516,7 +518,7 @@ CodyTest.inputHandler = {
         ruLegJoint:updateLocation()
         rlLegJoint:updateLocation()
         confirm:updateLocation()
-        manageCracks(change)
+        manageCracks()
     end,
     crankDocked = function() -- Runs once when when crank is docked.
         -- Your code here
@@ -527,13 +529,11 @@ CodyTest.inputHandler = {
 
 }
 
-function manageCracks(change)
-    spinSinceLastCrack += change
-
-    if (spinSinceLastCrack > 750 and hasEnoughTimePassed == true) then
+function manageCracks()
+    if (hasEnoughTimePassed == true) then
         hasEnoughTimePassed = false
         spinSinceLastCrack = 0
-        playdate.timer.performAfterDelay(5000, function()
+        playdate.timer.performAfterDelay(getCrunchDelay(), function()
             hasEnoughTimePassed = true
         end)
         playdate.sound.sampleplayer.new("assets/sounds/bone_crunch_" .. lastCrunchPlayed):play()

@@ -183,6 +183,7 @@ function CodyTest:enter()
     ruLegJoint = Joint(0, 0, 270, 40, lBodyJoint, 135, rULegSprite)
     rlLegJoint = Joint(0, 0, 30, 40, ruLegJoint, 90, rLLegSprite)
     confirm = Joint(200, 50, 0, 16, nil, 0, confirmSprite)
+    confirm.isConfirm = true
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()
@@ -600,8 +601,10 @@ CodyTest.inputHandler = {
     --
     cranked = function(change, acceleratedChange) -- Runs when the crank is rotated. See Playdate SDK documentation for details.
         if not handleInput then return end
-        currentJoint.rot = currentJoint.rot + change
-        currentJoint.sprite:setRotation(currentJoint.rot)
+        if currentJoint.isConfirm == false then
+            currentJoint.rot = currentJoint.rot + change
+            currentJoint.sprite:setRotation(currentJoint.rot)
+        end
 
         headJoint:updateLocation()
         uBodyJoint:updateLocation()

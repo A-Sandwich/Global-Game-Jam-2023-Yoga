@@ -1,7 +1,7 @@
 name=Yoga Therapy
 author=Cxsquared, Kevin Sanchez, Kyle Burkholder, and ToastyFish
 description=Help yoga patients fix their blocked chakras by bending them into shape.  It's yoga time!
-bundleID=me.codyclaborn
+bundleID=me.codyclaborn.yoga
 version=0.1.0
 buildNumber=2
 imagePath=assets/launcher/

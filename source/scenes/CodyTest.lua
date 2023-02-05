@@ -448,7 +448,13 @@ function CodyTest.checkDevil()
     end
 
     if devilChecksPassed >= 5 then
-        print("devil cleared")
+        headJoint.sprite:remove()
+        local devilHeadSprite = NobleSprite("assets/images/DemonPose")
+        devilHeadSprite:setCenter(0.5, .75)
+        devilHeadSprite:setZIndex(-1)
+        headJoint.sprite = devilHeadSprite
+        devilHeadSprite:add()
+        headJoint:updateLocation()
     end
 end
 

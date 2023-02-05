@@ -54,7 +54,7 @@ local twoStarAnimation
 local threeStarAnimation
 local fourStarAnimation
 local fiveStarAnimation
-local easingFunc = playdate.easingFunctions.outCirc
+local easingFunc = playdate.easingFunctions.inQuad
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)

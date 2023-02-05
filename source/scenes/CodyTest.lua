@@ -39,6 +39,8 @@ local handleInput = true
 
 local spinSinceLastCrack = 0
 local lastCrunchPlayed = 1
+local hasEnoughTimePassed = true
+local crunchDelay = 5
 
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
@@ -66,25 +68,23 @@ end
 function CodyTest.buildScoringPoints()
     -- head
     local headStartX, headStartY = headJoint:getPos()
-    ScoringPoints.add(headStartX - 40, headStartY - 10, ScoringPoints.bodyPartType.Head,
-        { ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(headStartX + 40, headStartY - 10, ScoringPoints.bodyPartType.Head,
-        { ScoringPoints.chakraTypes.ThirdEye });
-    ScoringPoints.add(headStartX, headStartY - 30, ScoringPoints.bodyPartType.Head,
+    ScoringPoints.add(210, 40, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
-    ScoringPoints.add(headStartX, headStartY + 80, ScoringPoints.bodyPartType.Head,
-        { ScoringPoints.chakraTypes.Death });
 
-    -- upper Body
-    ScoringPoints.add(uBodyJoint.x, uBodyJoint.y, ScoringPoints.bodyPartType.UpperBody,
-        { ScoringPoints.chakraTypes.Heart, ScoringPoints.chakraTypes.Throat });
+    --ScoringPoints.add(headStartX, headStartY + 80, ScoringPoints.bodyPartType.Head,
+    --     { ScoringPoints.chakraTypes.Death });
 
-    -- Lower Body
-    local lowerStartx, lowerStarty = lBodyJoint:getPos()
-    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Solarplexus });
-    ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Sacral });
-    ScoringPoints.add(lowerStartx, lowerStarty, ScoringPoints.bodyPartType.LowerBody,
-        { ScoringPoints.chakraTypes.Sacral });
+    ScoringPoints.add(100, 75, ScoringPoints.bodyPartType.LeftLowerArm,
+        { ScoringPoints.chakraTypes.Throat });
+
+    ScoringPoints.add(300, 65, ScoringPoints.bodyPartType.RightLowerArm,
+        { ScoringPoints.chakraTypes.Throat });
+
+    ScoringPoints.add(130, 195, ScoringPoints.bodyPartType.LeftLowerLeg,
+        { ScoringPoints.chakraTypes.Throat });
+
+    ScoringPoints.add(270, 175, ScoringPoints.bodyPartType.RightLowerLeg,
+        { ScoringPoints.chakraTypes.Throat });
 
 end
 
@@ -146,31 +146,18 @@ function CodyTest:enter()
     rLLegSprite:setCenter(0.5, 0)
     rLLegSprite:add()
 
-    uBodyJoint = Joint(200, 100, 0, 32, nil, 0, bodySprite)
-    lBodyJoint = Joint(0, 0, 0, 24, uBodyJoint, 90, lBodySprite)
-    headJoint = Joint(0, 0, 0, 16, uBodyJoint, 270, headSprite)
-    luArmJoint = Joint(0, 0, 0, 40, uBodyJoint, 225, lUArmSprite)
-    llArmJoint = Joint(0, 0, 0, 40, luArmJoint, 90, lLArmSprite)
-    ruArmJoint = Joint(0, 0, 0, 40, uBodyJoint, 315, rUArmSprite)
-    rlArmJoint = Joint(0, 0, 0, 40, ruArmJoint, 90, rLArmSprite)
-    luLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 45, lULegSprite)
-    llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
-    ruLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 135, rULegSprite)
-    rlLegJoint = Joint(0, 0, 0, 40, ruLegJoint, 90, rLLegSprite)
+    uBodyJoint = Joint(200, 100, math.random() * 360, 32, nil, 0, bodySprite)
+    lBodyJoint = Joint(0, 0, math.random() * 360, 24, uBodyJoint, 90, lBodySprite)
+    headJoint = Joint(0, 0, math.random() * 360, 16, uBodyJoint, 270, headSprite)
+    luArmJoint = Joint(0, 0, math.random() * 360, 40, uBodyJoint, 225, lUArmSprite)
+    llArmJoint = Joint(0, 0, math.random() * 360, 40, luArmJoint, 90, lLArmSprite)
+    ruArmJoint = Joint(0, 0, math.random() * 360, 40, uBodyJoint, 315, rUArmSprite)
+    rlArmJoint = Joint(0, 0, math.random() * 360, 40, ruArmJoint, 90, rLArmSprite)
+    luLegJoint = Joint(0, 0, math.random() * 360, 40, lBodyJoint, 45, lULegSprite)
+    llLegJoint = Joint(0, 0, math.random() * 360, 40, luLegJoint, 90, lLLegSprite)
+    ruLegJoint = Joint(0, 0, math.random() * 360, 40, lBodyJoint, 135, rULegSprite)
+    rlLegJoint = Joint(0, 0, math.random() * 360, 40, ruLegJoint, 90, rLLegSprite)
     confirm = Joint(200, 50, 0, 16, nil, 0, confirmSprite)
-
-    joints[1] = uBodyJoint
-    joints[2] = headJoint
-    joints[3] = lBodyJoint
-    joints[4] = luArmJoint
-    joints[5] = llArmJoint
-    joints[6] = ruArmJoint
-    joints[7] = rlArmJoint
-    joints[8] = luLegJoint
-    joints[9] = llLegJoint
-    joints[10] = ruLegJoint
-    joints[11] = rlLegJoint
-    joints[12] = confirm
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()
@@ -192,6 +179,10 @@ function CodyTest:enter()
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
     CodyTest.buildScoringPoints()
+
+    playdate.timer.performAfterDelay(5000, function()
+        hasEnoughTimePassed = true
+    end)
 end
 
 -- This runs once a transition from another scene is complete.
@@ -204,7 +195,36 @@ end
 function CodyTest:update()
     CodyTest.super.update(self)
     -- Your code here
-    -- ScoringPoints.getClosestPoint(uBodyJoint.x, uBodyJoint.y,)
+
+    CodyTest.updateSparkle()
+end
+
+local sparkleDistance = 30
+local sparkels = {}
+sparkels["head"] = nil
+
+function onSparkleFinish(key)
+    Graphics.sprite.removeSprites({ sparkels[key] })
+    sparkels[key] = nil
+end
+
+function CodyTest.updateSparkle()
+    local randDist = math.random() * 32
+    local randRad = math.random() * 2 * math.pi;
+    local randX = math.sin(randRad) * randDist
+    local randY = math.cos(randRad) * randDist
+
+    -- head
+    local hX, hY = headJoint:getPos()
+    local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
+
+    if headScore.distanceFromBodyPart < sparkleDistance and sparkels["head"] == nil then
+        local spark = Sparkle(onSparkleFinish, "head")
+        spark:moveTo(headScore.x + randX, headScore.y + randY)
+        sparkels["head"] = spark
+    end
+
+
 end
 
 -- This runs once per frame, and is meant for drawing code.
@@ -369,12 +389,16 @@ CodyTest.inputHandler = {
 function manageCracks(change)
     spinSinceLastCrack += change
 
-    if(spinSinceLastCrack > 750) then
+    if (spinSinceLastCrack > 750 and hasEnoughTimePassed == true) then
+        hasEnoughTimePassed = false
         spinSinceLastCrack = 0
+        playdate.timer.performAfterDelay(5000, function()
+            hasEnoughTimePassed = true
+        end)
         playdate.sound.sampleplayer.new("assets/sounds/bone_crunch_" .. lastCrunchPlayed):play()
         lastCrunchPlayed = lastCrunchPlayed + 1
-        if(lastCrunchPlayed > 4) then
+        if (lastCrunchPlayed > 4) then
             lastCrunchPlayed = 1
         end
-    end 
+    end
 end

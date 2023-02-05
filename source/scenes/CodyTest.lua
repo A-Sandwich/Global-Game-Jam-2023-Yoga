@@ -524,9 +524,9 @@ function CodyTest:drawBackground()
 
     if handleInput then
         Noble.Text.draw("Dock🎣", 43, 53)
-        Noble.Text.draw("Wwhen\nFinished", 62, 106, Noble.Text.ALIGN_CENTER, false, Noble.Text.FONT_SMALL)
+        Noble.Text.draw("When\nFinished", 62, 106, Noble.Text.ALIGN_CENTER, false, Noble.Text.FONT_SMALL)
     else
-        Noble.Text.draw("Undock🎣", 43, 53)
+        Noble.Text.draw("Undock🎣", 36, 53)
         Noble.Text.draw("To\nContinue", 62, 106, Noble.Text.ALIGN_CENTER, false, Noble.Text.FONT_SMALL)
     end
 

@@ -59,7 +59,7 @@ function CodyTest:init()
     CodyTest.super.init(self)
     isDevil = false
     screenShakeMin = 1
-    screenShakeMax = 10
+    screenShakeMax = 3
     shakeScreen = false
     background = Graphics.image.new("assets/images/backgrounds/Studio")
     poster = Graphics.image.new("assets/images/Poster")
@@ -554,6 +554,7 @@ function CodyTest:drawBackground()
 end
 
 function shake()
+    if playdate.getReduceFlashing() then return end
     local x = screenShakeMin + math.random() * screenShakeMax
     local y = screenShakeMin + math.random() * screenShakeMax
     playdate.display.setOffset(x, y)

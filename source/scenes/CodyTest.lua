@@ -309,7 +309,7 @@ function getSparkleDelay()
 end
 
 function getCrunchDelay()
-    return 5000 + math.random() * 2000
+    return 10000 + math.random() * 5000
 end
 
 function CodyTest.updateSparkle()

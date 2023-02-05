@@ -16,7 +16,6 @@ class("CodyTest").extends(NobleScene)
 --
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
-local geo = playdate.geometry
 local Animator = playdate.graphics.animator
 local headJoint
 local uBodyJoint
@@ -33,7 +32,6 @@ local jointSelector
 local confirm
 local bounceInTime = 750
 
-local joints = {}
 local currentJoint
 
 local background
@@ -47,7 +45,7 @@ local crunchDelay = 5
 local rootChakra
 local twoStar
 local threeStar
-local fourStar 
+local fourStar
 local fiveStar
 local rootChakraAnimation
 local twoStarAnimation
@@ -107,56 +105,51 @@ function CodyTest:enter()
     CodyTest.super.enter(self)
     -- Your code here
 
-    local utorsoImage = Graphics.image.new("assets/images/UpperTorso")
-    local ltorsoImage = Graphics.image.new("assets/images/LowerTorso")
-
-    local bodySprite = Graphics.sprite.new(utorsoImage)
+    local bodySprite = NobleSprite("assets/images/UpperTorso")
     bodySprite:setCenter(0.5, 0.5)
     bodySprite:add()
 
-    local lBodySprite = Graphics.sprite.new(ltorsoImage)
+    local lBodySprite = NobleSprite("assets/images/LowerTorso")
     lBodySprite:setCenter(0.5, 0.25)
     lBodySprite:add()
 
-    local headSprite = Graphics.sprite.new(Graphics.image.new("assets/images/head"))
+    local headSprite = NobleSprite("assets/images/head")
     headSprite:setCenter(0.5, .75)
     headSprite:add()
 
-    local confirmSprite = Graphics.sprite.new(Graphics.image.new("assets/images/NonConfirmState"))
+    local confirmSprite = NobleSprite("assets/images/NonConfirmState")
     confirmSprite:setCenter(0.5, 1.4)
     confirmSprite:add()
 
-    local partsImage = Graphics.image.new("assets/images/Parts")
-
-    local lUArmSprite = Graphics.sprite.new(partsImage)
+    local lUArmSprite = NobleSprite("assets/images/Parts")
     lUArmSprite:setCenter(0.7, 0)
     lUArmSprite:add()
 
-    local lLArmSprite = Graphics.sprite.new(partsImage)
+    local lLArmSprite = NobleSprite("assets/images/Parts")
     lLArmSprite:setCenter(0.5, 0)
     lLArmSprite:add()
 
-    local rUArmSprite = Graphics.sprite.new(partsImage)
+    local rUArmSprite = NobleSprite("assets/images/Parts")
     rUArmSprite:setCenter(0.3, 0)
     rUArmSprite:add()
 
-    local rLArmSprite = Graphics.sprite.new(partsImage)
+    local rLArmSprite = NobleSprite("assets/images/Parts")
     rLArmSprite:setCenter(0.5, 0)
     rLArmSprite:add()
 
-    local lULegSprite = Graphics.sprite.new(partsImage)
+    local lULegSprite = NobleSprite("assets/images/Parts")
     lULegSprite:setCenter(0.5, 0)
     lULegSprite:add()
 
-    local lLLegSprite = Graphics.sprite.new(partsImage)
+    local lLLegSprite = NobleSprite("assets/images/Parts")
     lLLegSprite:setCenter(0.5, 0)
     lLLegSprite:add()
 
-    local rULegSprite = Graphics.sprite.new(partsImage)
+    local rULegSprite = NobleSprite("assets/images/Parts")
     rULegSprite:setCenter(0.5, 0)
     rULegSprite:add()
 
-    local rLLegSprite = Graphics.sprite.new(partsImage)
+    local rLLegSprite = NobleSprite("assets/images/Parts")
     rLLegSprite:setCenter(0.5, 0)
     rLLegSprite:add()
 
@@ -200,7 +193,7 @@ end
 
 function showStats()
     rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
-    
+
     rootChakra:moveTo(56, 240)
     rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
     rootChakra:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show2Star })
@@ -222,6 +215,7 @@ function show3Star()
     threeStar:addState('idle', 1, 16, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
     threeStar:playAnimation()
 end
+
 function show4Star()
     fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
     fourStar:moveTo(248, 225)
@@ -229,6 +223,7 @@ function show4Star()
     fourStar:addState('idle', 1, 10, { tickStep = 1, loop = false, onLoopFinishedEvent = show5Star })
     fourStar:playAnimation()
 end
+
 function show5Star()
     fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
     fiveStar:moveTo(312, 225)
@@ -236,6 +231,7 @@ function show5Star()
     fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })
     fiveStar:playAnimation()
 end
+
 -- 400 x 240
 -- This runs once a transition from another scene is complete.
 function CodyTest:start()
@@ -279,7 +275,7 @@ local sparkels = {}
 sparkels["head"] = nil
 
 function onSparkleFinish(key)
-    Graphics.sprite.removeSprites({ sparkels[key] })
+    NobleScene:removeSprite(sparkels[key])
     sparkels[key] = nil
 end
 
@@ -305,6 +301,7 @@ function CodyTest.updateSparkle()
         canSparkle = false
         local spark = Sparkle(onSparkleFinish, "head")
         spark:moveTo(headScore.x + randX, headScore.y + randY)
+        NobleScene:addSprite(spark)
         sparkels["head"] = spark
         playdate.timer.performAfterDelay(getSparkleDelay(), function()
             canSparkle = true
@@ -390,7 +387,19 @@ end
 -- This runs once a transition to another scene completes.
 function CodyTest:finish()
     CodyTest.super.finish(self)
-    -- Your code here
+
+    currentJoint = nil
+    headJoint = nil
+    uBodyJoint = nil
+    lBodyJoint = nil
+    luArmJoint = nil
+    llArmJoint = nil
+    ruArmJoint = nil
+    rlArmJoint = nil
+    luLegJoint = nil
+    llLegJoint = nil
+    ruLegJoint = nil
+    rlLegJoint = nil
 end
 
 function CodyTest:pause()

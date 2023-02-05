@@ -1,8 +1,8 @@
-name=A Noble Engine Game
-author=A Lovely Developer
-description=This is a Noble Engine game.
-bundleID=com.yourdomain.GameName
-version=0.0.1
-buildNumber=1
+name=Yoga Therapy
+author=Cxsquared, Kevin Sanchez, Kyle Burkholder, and ToastyFish
+description=Help yoga patients fix their blocked chakras by bending them into shape.  It's yoga time!
+bundleID=me.codyclaborn
+version=0.1.0
+buildNumber=2
 imagePath=assets/launcher/
 launchSoundPath=assets/launcher/sound.wav

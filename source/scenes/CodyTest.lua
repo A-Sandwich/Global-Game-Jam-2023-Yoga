@@ -61,6 +61,7 @@ function UpdateJointSelector(isUp, isDown, isLeft, isRight)
 end
 
 function endGame()
+    playdate.sound.sampleplayer.new("assets/sounds/sparkle"):play()
     print("End game")
     handleInput = false
 end

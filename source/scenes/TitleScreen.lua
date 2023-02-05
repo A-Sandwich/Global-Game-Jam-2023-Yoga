@@ -15,6 +15,7 @@ function TitleScreen:init()
 
 	TitleScreen.inputHandler = {
 		AButtonDown = function()
+			playdate.sound.sampleplayer.new("assets/sounds/sparkle"):play()
 			Noble.transition(CodyTest)
 		end
 	}

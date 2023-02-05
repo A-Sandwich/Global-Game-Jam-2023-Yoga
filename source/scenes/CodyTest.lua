@@ -238,7 +238,7 @@ function show3Star()
 
         threeStar:moveTo(184, 225)
         threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-        threeStar:addState('idle', 1, 16, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
+        threeStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
         threeStar:playAnimation()
     end
 end
@@ -247,10 +247,10 @@ function show4Star()
     if numberOfStars > 3 then
         fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
         playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
-
+        
         fourStar:moveTo(248, 225)
         fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-        fourStar:addState('idle', 1, 10, { tickStep = 1, loop = false, onLoopFinishedEvent = show5Star })
+        fourStar:addState('idle', 1, 10, { tickStep = 2, loop = false, onLoopFinishedEvent = show5Star })
         fourStar:playAnimation()
     end
 end

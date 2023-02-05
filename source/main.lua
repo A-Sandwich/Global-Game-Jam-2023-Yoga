@@ -23,5 +23,5 @@ Noble.GameData.setup({
 	Score = 0
 })
 
-Noble.showFPS = false
+Noble.showFPS = true
 Noble.new(TitleScreen, 1.5, Noble.TransitionType.CROSS_DISSOLVE)

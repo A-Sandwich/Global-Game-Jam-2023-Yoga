@@ -79,12 +79,9 @@ function endGame()
 end
 
 function CodyTest.buildScoringPoints()
-    -- head
+    -- standard
     ScoringPoints.add(240, 60, ScoringPoints.bodyPartType.Head,
         { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
-
-    --ScoringPoints.add(headStartX, headStartY + 80, ScoringPoints.bodyPartType.Head,
-    --     { ScoringPoints.chakraTypes.Death });
 
     ScoringPoints.add(230, 45, ScoringPoints.bodyPartType.LeftLowerArm,
         { ScoringPoints.chakraTypes.Throat });
@@ -98,12 +95,31 @@ function CodyTest.buildScoringPoints()
     ScoringPoints.add(220, 145, ScoringPoints.bodyPartType.LeftLowerLeg,
         { ScoringPoints.chakraTypes.Throat });
 
+    -- devil
+    ScoringPoints.add(200, 132, ScoringPoints.bodyPartType.Head,
+        { ScoringPoints.chakraTypes.Death });
+
+    ScoringPoints.add(253, 149, ScoringPoints.bodyPartType.LeftLowerArm,
+        { ScoringPoints.chakraTypes.Death });
+
+    ScoringPoints.add(153, 154, ScoringPoints.bodyPartType.RightLowerArm,
+        { ScoringPoints.chakraTypes.Death });
+
+    ScoringPoints.add(250, 29, ScoringPoints.bodyPartType.RightLowerLeg,
+        { ScoringPoints.chakraTypes.Death });
+
+    ScoringPoints.add(154, 22, ScoringPoints.bodyPartType.LeftLowerLeg,
+        { ScoringPoints.chakraTypes.Death });
+
 end
 
 -- When transitioning from another scene, this runs as soon as this scene needs to be visible (this moment depends on which transition type is used).
 function CodyTest:enter()
     CodyTest.super.enter(self)
-    -- Your code here
+
+    if Noble.showFPS == false then
+        Noble.Input.setCrankIndicatorStatus(true)
+    end
 
     local bodySprite = NobleSprite("assets/images/UpperTorso")
     bodySprite:setCenter(0.5, 0.5)
@@ -236,15 +252,15 @@ end
 -- This runs once a transition from another scene is complete.
 function CodyTest:start()
     CodyTest.super.start(self)
-    -- Your code here
 end
 
 -- This runs once per frame.
 function CodyTest:update()
     CodyTest.super.update(self)
-    -- Your code here
 
     CodyTest.updateSparkle()
+    CodyTest.checkDevil()
+
     if rootChakraAnimation then
         local y = rootChakraAnimation:currentValue()
         rootChakra:moveTo(rootChakra.x, y)
@@ -366,6 +382,49 @@ function CodyTest.updateSparkle()
 
 end
 
+function CodyTest.checkDevil()
+    local devilChecksPassed = 0
+
+    local hX, hY = headJoint:getPos()
+    local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
+    if headScore.chakras[1] == ScoringPoints.chakraTypes.Death
+        and headScore.distanceFromBodyPart < 10 then
+        devilChecksPassed = devilChecksPassed + 1
+    end
+
+    local laX, laY = llArmJoint:getPos()
+    local leftArmScore = ScoringPoints.getClosestPoint(laX, laY, ScoringPoints.bodyPartType.LeftLowerArm)
+    if leftArmScore.chakras[1] == ScoringPoints.chakraTypes.Death
+        and leftArmScore.distanceFromBodyPart < 10 then
+        devilChecksPassed = devilChecksPassed + 1
+    end
+
+    local raX, raY = rlArmJoint:getPos()
+    local rightArmScore = ScoringPoints.getClosestPoint(raX, raY, ScoringPoints.bodyPartType.RightLowerArm)
+    if rightArmScore.chakras[1] == ScoringPoints.chakraTypes.Death
+        and rightArmScore.distanceFromBodyPart < 10 then
+        devilChecksPassed = devilChecksPassed + 1
+    end
+
+    local llX, llY = llLegJoint:getPos()
+    local leftLegScore = ScoringPoints.getClosestPoint(llX, llY, ScoringPoints.bodyPartType.LeftLowerLeg)
+    if leftLegScore.chakras[1] == ScoringPoints.chakraTypes.Death
+        and leftLegScore.distanceFromBodyPart < 10 then
+        devilChecksPassed = devilChecksPassed + 1
+    end
+
+    local rlX, rlY = rlLegJoint:getPos()
+    local rightLegScore = ScoringPoints.getClosestPoint(rlX, rlY, ScoringPoints.bodyPartType.RightLowerLeg)
+    if rightLegScore.chakras[1] == ScoringPoints.chakraTypes.Death
+        and rightLegScore.distanceFromBodyPart < 10 then
+        devilChecksPassed = devilChecksPassed + 1
+    end
+
+    if devilChecksPassed >= 5 then
+        print("devil cleared")
+    end
+end
+
 -- This runs once per frame, and is meant for drawing code.
 function CodyTest:drawBackground()
     CodyTest.super.drawBackground(self)
@@ -421,37 +480,32 @@ CodyTest.inputHandler = {
         if not handleInput then return end
         if currentJoint == confirm then
             endGame()
-        else
-            Noble.Input.setCrankIndicatorStatus(true)
         end
-    end,
-    AButtonHold = function() -- Runs every frame while the player is holding button down.
-        -- Your code here
-    end,
-    AButtonHeld = function() -- Runs after button is held for 1 second.
-        -- Your code here
-    end,
-    AButtonUp = function() -- Runs once when button is released.
-        -- Your code here
     end,
 
     -- B button
     --
     BButtonDown = function()
         if not handleInput then return end
-        -- Your code here
-        local hX, hY = headJoint:getPos()
-        local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
 
-    end,
-    BButtonHeld = function()
-        -- Your code here
-    end,
-    BButtonHold = function()
-        -- Your code here
-    end,
-    BButtonUp = function()
-        -- Your code here
+        if Noble.showFPS then
+            local hx, hy = headJoint:getPos()
+            print("head " .. headJoint.rot .. ":" .. hx .. "x" .. hy)
+            print("uBody" .. uBodyJoint.rot .. ":" .. uBodyJoint:getPos())
+            print("lBody" .. lBodyJoint.rot .. ":" .. lBodyJoint:getPos())
+            print("LUArm" .. luArmJoint.rot .. ":" .. luArmJoint:getPos())
+            local lax, lay = llArmJoint:getPos()
+            print("LLArm" .. llArmJoint.rot .. ":" .. lax .. "x" .. lay)
+            print("RUArm" .. ruArmJoint.rot .. ":" .. ruArmJoint:getPos())
+            local rax, ray = rlArmJoint:getPos()
+            print("RLArm" .. rlArmJoint.rot .. ":" .. rax .. "x" .. ray)
+            print("LULeg" .. luLegJoint.rot .. ":" .. luLegJoint:getPos())
+            local llx, lly = llLegJoint:getPos()
+            print("LLLeg" .. llLegJoint.rot .. ":" .. llx .. "x" .. lly)
+            print("RULeg" .. ruLegJoint.rot .. ":" .. ruLegJoint:getPos())
+            local rlx, rly = rlLegJoint:getPos()
+            print("RLLeg" .. rlLegJoint.rot .. ":" .. rlx .. "x" .. rly)
+        end
     end,
 
     -- D-pad left
@@ -460,24 +514,12 @@ CodyTest.inputHandler = {
         if not handleInput then return end
         UpdateJointSelector(false, false, true, false)
     end,
-    leftButtonHold = function()
-        -- Your code here
-    end,
-    leftButtonUp = function()
-        -- Your code here
-    end,
 
     -- D-pad right
     --
     rightButtonDown = function()
         if not handleInput then return end
         UpdateJointSelector(false, false, false, true)
-    end,
-    rightButtonHold = function()
-        -- Your code here
-    end,
-    rightButtonUp = function()
-        -- Your code here
     end,
 
     -- D-pad up
@@ -486,24 +528,12 @@ CodyTest.inputHandler = {
         if not handleInput then return end
         UpdateJointSelector(true, false, false, false)
     end,
-    upButtonHold = function()
-        -- Your code here
-    end,
-    upButtonUp = function()
-        -- Your code here
-    end,
 
     -- D-pad down
     --
     downButtonDown = function()
         if not handleInput then return end
         UpdateJointSelector(false, true, false, false)
-    end,
-    downButtonHold = function()
-        -- Your code here
-    end,
-    downButtonUp = function()
-        -- Your code here
     end,
 
     -- Crank
@@ -527,13 +557,6 @@ CodyTest.inputHandler = {
         confirm:updateLocation()
         manageCracks(change)
     end,
-    crankDocked = function() -- Runs once when when crank is docked.
-        -- Your code here
-    end,
-    crankUndocked = function() -- Runs once when when crank is undocked.
-        -- Your code here
-    end
-
 }
 
 function manageCracks(change)

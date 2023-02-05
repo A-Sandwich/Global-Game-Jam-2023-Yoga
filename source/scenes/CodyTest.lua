@@ -9,6 +9,11 @@ CodyTest = {}
 class("CodyTest").extends(NobleScene)
 
 -- It is recommended that you declare, but don't yet define, your scene-specific varibles and methods here. Use "local" where possible.
+--
+-- local variable1 = nil
+-- CodyTest.variable2 = nil
+-- ...
+--
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
 
@@ -24,22 +29,35 @@ local llLegJoint
 local ruLegJoint
 local rlLegJoint
 local jointSelector
+local confirm
 
+local joints = {}
 local currentJoint
 
 local background
+local handleInput = true
 
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)
 
     background = Graphics.image.new("assets/images/backgrounds/Studio")
+    playdate.resetElapsedTime()
 
 end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
     currentJoint = jointSelector:getNextJoint(isUp, isDown, isLeft, isRight)
-    jointSelector:moveTo(currentJoint:getPos())
+    if currentJoint == confirm then
+        jointSelector:moveTo(currentJoint.sprite.x, currentJoint.sprite.y - currentJoint.sprite.height)
+    else
+        jointSelector:moveTo(currentJoint:getPos())
+    end
+end
+
+function endGame()
+    print("End game")
+    handleInput = false
 end
 
 function CodyTest.buildScoringPoints()
@@ -55,15 +73,15 @@ function CodyTest.buildScoringPoints()
         { ScoringPoints.chakraTypes.Death });
 
     -- upper Body
-    --ScoringPoints.add(uBodyJoint.x, uBodyJoint.y, ScoringPoints.bodyPartType.UpperBody,
-    --    { ScoringPoints.chakraTypes.Heart, ScoringPoints.chakraTypes.Throat });
+    ScoringPoints.add(uBodyJoint.x, uBodyJoint.y, ScoringPoints.bodyPartType.UpperBody,
+        { ScoringPoints.chakraTypes.Heart, ScoringPoints.chakraTypes.Throat });
 
     -- Lower Body
     local lowerStartx, lowerStarty = lBodyJoint:getPos()
-    --ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Solarplexus });
-    --ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Sacral });
-    --ScoringPoints.add(lowerStartx, lowerStarty, ScoringPoints.bodyPartType.LowerBody,
-    --    { ScoringPoints.chakraTypes.Sacral });
+    ScoringPoints.add(200, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Solarplexus });
+    ScoringPoints.add(300, 150, ScoringPoints.bodyPartType.LowerBody, { ScoringPoints.chakraTypes.Sacral });
+    ScoringPoints.add(lowerStartx, lowerStarty, ScoringPoints.bodyPartType.LowerBody,
+        { ScoringPoints.chakraTypes.Sacral });
 
 end
 
@@ -86,6 +104,10 @@ function CodyTest:enter()
     local headSprite = Graphics.sprite.new(Graphics.image.new("assets/images/head"))
     headSprite:setCenter(0.5, .75)
     headSprite:add()
+
+    local confirmSprite = Graphics.sprite.new(Graphics.image.new("assets/images/NonConfirmState"))
+    confirmSprite:setCenter(0.5, 1.4)
+    confirmSprite:add()
 
     local partsImage = Graphics.image.new("assets/images/Parts")
 
@@ -132,6 +154,20 @@ function CodyTest:enter()
     llLegJoint = Joint(0, 0, 0, 40, luLegJoint, 90, lLLegSprite)
     ruLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 135, rULegSprite)
     rlLegJoint = Joint(0, 0, 0, 40, ruLegJoint, 90, rLLegSprite)
+    confirm = Joint(0, 0, 0, 16, headJoint, 270, confirmSprite)
+
+    joints[1] = uBodyJoint
+    joints[2] = headJoint
+    joints[3] = lBodyJoint
+    joints[4] = luArmJoint
+    joints[5] = llArmJoint
+    joints[6] = ruArmJoint
+    joints[7] = rlArmJoint
+    joints[8] = luLegJoint
+    joints[9] = llLegJoint
+    joints[10] = ruLegJoint
+    joints[11] = rlLegJoint
+    joints[12] = confirm
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()
@@ -144,10 +180,11 @@ function CodyTest:enter()
     llLegJoint:updateLocation()
     ruLegJoint:updateLocation()
     rlLegJoint:updateLocation()
+    confirm:updateLocation()
 
 
     jointSelector = JointSelector(uBodyJoint, headJoint, lBodyJoint, luArmJoint, llArmJoint, ruArmJoint, rlArmJoint,
-        luLegJoint, llLegJoint, ruLegJoint, rlLegJoint)
+        luLegJoint, llLegJoint, ruLegJoint, rlLegJoint, confirm)
     currentJoint = jointSelector:getNextJoint(false, false, false, false)
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
@@ -165,6 +202,7 @@ end
 function CodyTest:update()
     CodyTest.super.update(self)
     -- Your code here
+    -- ScoringPoints.getClosestPoint(uBodyJoint.x, uBodyJoint.y,)
 end
 
 -- This runs once per frame, and is meant for drawing code.
@@ -207,7 +245,12 @@ CodyTest.inputHandler = {
     -- A button
     --
     AButtonDown = function() -- Runs once when button is pressed.
-        Noble.Input.setCrankIndicatorStatus(true)
+        if not handleInput then return end
+        if currentJoint == confirm then
+            endGame()
+        else
+            Noble.Input.setCrankIndicatorStatus(true)
+        end
     end,
     AButtonHold = function() -- Runs every frame while the player is holding button down.
         -- Your code here
@@ -222,6 +265,7 @@ CodyTest.inputHandler = {
     -- B button
     --
     BButtonDown = function()
+        if not handleInput then return end
         -- Your code here
         local hX, hY = headJoint:getPos()
         local headScore = ScoringPoints.getClosestPoint(hX, hY, ScoringPoints.bodyPartType.Head)
@@ -241,6 +285,7 @@ CodyTest.inputHandler = {
     -- D-pad left
     --
     leftButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(false, false, true, false)
     end,
     leftButtonHold = function()
@@ -253,6 +298,7 @@ CodyTest.inputHandler = {
     -- D-pad right
     --
     rightButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(false, false, false, true)
     end,
     rightButtonHold = function()
@@ -265,6 +311,7 @@ CodyTest.inputHandler = {
     -- D-pad up
     --
     upButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(true, false, false, false)
     end,
     upButtonHold = function()
@@ -277,6 +324,7 @@ CodyTest.inputHandler = {
     -- D-pad down
     --
     downButtonDown = function()
+        if not handleInput then return end
         UpdateJointSelector(false, true, false, false)
     end,
     downButtonHold = function()
@@ -289,6 +337,7 @@ CodyTest.inputHandler = {
     -- Crank
     --
     cranked = function(change, acceleratedChange) -- Runs when the crank is rotated. See Playdate SDK documentation for details.
+        if not handleInput then return end
         currentJoint.rot = currentJoint.rot + change
         currentJoint.sprite:setRotation(currentJoint.rot)
 
@@ -303,6 +352,7 @@ CodyTest.inputHandler = {
         llLegJoint:updateLocation()
         ruLegJoint:updateLocation()
         rlLegJoint:updateLocation()
+        confirm:updateLocation()
     end,
     crankDocked = function() -- Runs once when when crank is docked.
         -- Your code here

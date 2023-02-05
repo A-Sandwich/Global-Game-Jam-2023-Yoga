@@ -123,21 +123,21 @@ function CodyTest.buildScoringPoints()
 
         ScoringPoints.add(255, 160, ScoringPoints.bodyPartType.LeftLowerLeg,
             { ScoringPoints.chakraTypes.Throat });
-        elseif customerNumber == 3 then
-            ScoringPoints.add(168, 100, ScoringPoints.bodyPartType.Head,
-                { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
-    
-            ScoringPoints.add(175, 150, ScoringPoints.bodyPartType.LeftLowerArm,
-                { ScoringPoints.chakraTypes.Throat });
-    
-            ScoringPoints.add(175, 40, ScoringPoints.bodyPartType.RightLowerArm,
-                { ScoringPoints.chakraTypes.Throat });
-    
-            ScoringPoints.add(245, 40, ScoringPoints.bodyPartType.LeftLowerLeg,
-                { ScoringPoints.chakraTypes.Throat });
-    
-            ScoringPoints.add(245, 150, ScoringPoints.bodyPartType.RightLowerLeg,
-                { ScoringPoints.chakraTypes.Throat });
+    elseif customerNumber == 3 then
+        ScoringPoints.add(168, 100, ScoringPoints.bodyPartType.Head,
+            { ScoringPoints.chakraTypes.ThirdEye, ScoringPoints.chakraTypes.Crown });
+
+        ScoringPoints.add(175, 150, ScoringPoints.bodyPartType.LeftLowerArm,
+            { ScoringPoints.chakraTypes.Throat });
+
+        ScoringPoints.add(175, 40, ScoringPoints.bodyPartType.RightLowerArm,
+            { ScoringPoints.chakraTypes.Throat });
+
+        ScoringPoints.add(245, 40, ScoringPoints.bodyPartType.LeftLowerLeg,
+            { ScoringPoints.chakraTypes.Throat });
+
+        ScoringPoints.add(245, 150, ScoringPoints.bodyPartType.RightLowerLeg,
+            { ScoringPoints.chakraTypes.Throat });
     end
 
 
@@ -239,9 +239,6 @@ function CodyTest:enter()
         ruLegJoint = Joint(0, 0, 0, 40, lBodyJoint, 135, rULegSprite)
         rlLegJoint = Joint(0, 0, 0, 40, ruLegJoint, 90, rLLegSprite)
     end
-
-    confirm = Joint(200, 50, 0, 16, nil, 0, confirmSprite)
-    confirm.isConfirm = true
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()

@@ -31,6 +31,8 @@ local background
 
 local spinSinceLastCrack = 0
 local lastCrunchPlayed = 1
+local hasEnoughTimePassed = true
+local crunchDelay = 5
 
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
@@ -155,6 +157,10 @@ function CodyTest:enter()
     jointSelector:moveTo(currentJoint:getPos())
     jointSelector:add()
     CodyTest.buildScoringPoints()
+
+    playdate.timer.performAfterDelay(5000, function()
+        hasEnoughTimePassed = true
+    end) 
 end
 
 -- This runs once a transition from another scene is complete.
@@ -320,11 +326,15 @@ CodyTest.inputHandler = {
 function manageCracks(change)
     spinSinceLastCrack += change
 
-    if(spinSinceLastCrack > 750) then
+    if(spinSinceLastCrack > 750 and hasEnoughTimePassed == true) then
+        hasEnoughTimePassed = false
         spinSinceLastCrack = 0
+        playdate.timer.performAfterDelay(5000, function()
+            hasEnoughTimePassed = true
+        end) 
         playdate.sound.sampleplayer.new("assets/sounds/bone_crunch_" .. lastCrunchPlayed):play()
         lastCrunchPlayed = lastCrunchPlayed + 1
-        if(lastCrunchPlayed > 4) then
+        if(lastCrunchPlayed > 5) then
             lastCrunchPlayed = 1
         end
     end 

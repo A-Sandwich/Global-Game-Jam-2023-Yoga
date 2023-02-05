@@ -51,6 +51,7 @@ local threeStarAnimation
 local fourStarAnimation
 local fiveStarAnimation
 local easingFunc = playdate.easingFunctions.inQuad
+local numberOfStars = 0.0
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
 function CodyTest:init()
     CodyTest.super.init(self)
@@ -206,53 +207,64 @@ function CodyTest:enter()
 end
 
 function showStats()
-    rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_01"):play()
+    numberOfStars = playdate.getElapsedTime() / 24
+    if numberOfStars > 0 then
+        rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_01"):play()
 
-    rootChakra:moveTo(56, 240)
-    rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    rootChakra:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show2Star })
-    rootChakra:playAnimation()
+        rootChakra:moveTo(56, 240)
+        rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        rootChakra:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show2Star })
+        rootChakra:playAnimation()
+    end
 end
 
 function show2Star()
-    twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_02"):play()
+    if numberOfStars > 1 then
+        twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_02"):play()
 
-    twoStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    twoStar:moveTo(120, 225)
-    twoStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show3Star })
-    twoStar:playAnimation()
+        twoStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        twoStar:moveTo(120, 225)
+        twoStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show3Star })
+        twoStar:playAnimation()
+    end
 end
 
 function show3Star()
-    threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_03"):play()
+    if numberOfStars > 2 then
+        threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_03"):play()
 
-    threeStar:moveTo(184, 225)
-    threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    threeStar:addState('idle', 1, 16, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
-    threeStar:playAnimation()
+        threeStar:moveTo(184, 225)
+        threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        threeStar:addState('idle', 1, 16, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
+        threeStar:playAnimation()
+    end
 end
 
 function show4Star()
-    fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
+    if numberOfStars > 3 then
+        fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
 
-    fourStar:moveTo(248, 225)
-    fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    fourStar:addState('idle', 1, 10, { tickStep = 1, loop = false, onLoopFinishedEvent = show5Star })
-    fourStar:playAnimation()
+        fourStar:moveTo(248, 225)
+        fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        fourStar:addState('idle', 1, 10, { tickStep = 1, loop = false, onLoopFinishedEvent = show5Star })
+        fourStar:playAnimation()
+    end
 end
 
 function show5Star()
-    fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_05"):play()
+    if numberOfStars > 4 then
+        fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_05"):play()
 
-    fiveStar:moveTo(312, 225)
-    fiveStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })
-    fiveStar:playAnimation()
+        fiveStar:moveTo(312, 225)
+        fiveStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })
+        fiveStar:playAnimation()
+    end
 end
 
 -- 400 x 240

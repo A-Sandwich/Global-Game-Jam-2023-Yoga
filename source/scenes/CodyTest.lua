@@ -606,16 +606,20 @@ CodyTest.inputHandler = {
     -- A button
     --
     AButtonDown = function() -- Runs once when button is pressed.
-        if not handleInput then
-            print("Reset")
-            Noble.transition(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
-            return
-        end
+        
     end,
 
     crankDocked = function()
         endGame()
     end,
+
+    crankUndocked = function()
+        if not handleInput then
+            print("Reset")
+            Noble.transition(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
+            return
+        end
+    end,	
 
     -- B button
     --

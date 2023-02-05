@@ -9,11 +9,6 @@ CodyTest = {}
 class("CodyTest").extends(NobleScene)
 
 -- It is recommended that you declare, but don't yet define, your scene-specific varibles and methods here. Use "local" where possible.
---
--- local variable1 = nil
--- CodyTest.variable2 = nil
--- ...
---
 
 CodyTest.backgroundColor = Graphics.kColorWhite -- This is the background color of this scene.
 local Animator = playdate.graphics.animator
@@ -51,13 +46,22 @@ local threeStarAnimation
 local fourStarAnimation
 local fiveStarAnimation
 local easingFunc = playdate.easingFunctions.inQuad
+local numberOfStars = 0.0
 -- This runs when your scene's object is created, which is the first thing that happens when transitining away from another scene.
+
 function CodyTest:init()
     CodyTest.super.init(self)
 
     background = Graphics.image.new("assets/images/backgrounds/Studio")
     playdate.resetElapsedTime()
 
+    handleInput = true
+    numberOfStars = 0.0
+    lastCrunchPlayed = 1
+    hasEnoughTimePassed = false
+    bounceInTime = 750
+    sparkels = {}
+    canSparkle = true
 end
 
 function UpdateJointSelector(isUp, isDown, isLeft, isRight)
@@ -179,6 +183,7 @@ function CodyTest:enter()
     ruLegJoint = Joint(0, 0, 270, 40, lBodyJoint, 135, rULegSprite)
     rlLegJoint = Joint(0, 0, 30, 40, ruLegJoint, 90, rLLegSprite)
     confirm = Joint(200, 50, 0, 16, nil, 0, confirmSprite)
+    confirm.isConfirm = true
 
     headJoint:updateLocation()
     uBodyJoint:updateLocation()
@@ -206,53 +211,65 @@ function CodyTest:enter()
 end
 
 function showStats()
-    rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_01"):play()
+    numberOfStars = playdate.getElapsedTime() / 24
+    print("Number of stars" .. numberOfStars)
+    if numberOfStars >= 0 then
+        rootChakra = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/rootChakra-expand"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_01"):play()
 
-    rootChakra:moveTo(56, 240)
-    rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    rootChakra:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show2Star })
-    rootChakra:playAnimation()
+        rootChakra:moveTo(56, 240)
+        rootChakraAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        rootChakra:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show2Star })
+        rootChakra:playAnimation()
+    end
 end
 
 function show2Star()
-    twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_02"):play()
+    if numberOfStars >= 1 then
+        twoStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/2Star_SolarPlexus"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_02"):play()
 
-    twoStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    twoStar:moveTo(120, 225)
-    twoStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show3Star })
-    twoStar:playAnimation()
+        twoStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        twoStar:moveTo(120, 225)
+        twoStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show3Star })
+        twoStar:playAnimation()
+    end
 end
 
 function show3Star()
-    threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_03"):play()
+    if numberOfStars >= 2 then
+        threeStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/3Star_Heart"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_03"):play()
 
-    threeStar:moveTo(184, 225)
-    threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    threeStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
-    threeStar:playAnimation()
+        threeStar:moveTo(184, 225)
+        threeStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        threeStar:addState('idle', 1, 14, { tickStep = 1, loop = false, onLoopFinishedEvent = show4Star })
+        threeStar:playAnimation()
+    end
 end
 
 function show4Star()
-    fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
+    if numberOfStars >= 3 then
+        fourStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/4Star_ThirdEye"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_04"):play()
 
-    fourStar:moveTo(248, 225)
-    fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    fourStar:addState('idle', 1, 10, { tickStep = 2, loop = false, onLoopFinishedEvent = show5Star })
-    fourStar:playAnimation()
+        fourStar:moveTo(248, 225)
+        fourStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        fourStar:addState('idle', 1, 10, { tickStep = 2, loop = false, onLoopFinishedEvent = show5Star })
+        fourStar:playAnimation()
+    end
 end
 
 function show5Star()
-    fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
-    playdate.sound.sampleplayer.new("assets/sounds/end_05"):play()
+    if numberOfStars >= 4 then
+        fiveStar = AnimatedSprite(playdate.graphics.imagetable.new("assets/images/5Star_Crown"))
+        playdate.sound.sampleplayer.new("assets/sounds/end_05"):play()
 
-    fiveStar:moveTo(312, 225)
-    fiveStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
-    fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })
-    fiveStar:playAnimation()
+        fiveStar:moveTo(312, 225)
+        fiveStarAnimation = Animator.new(bounceInTime, 240, 225, easingFunc)
+        fiveStar:addState('idle', 1, 13, { tickStep = 1, loop = false })
+        fiveStar:playAnimation()
+    end
 end
 
 -- 400 x 240
@@ -268,34 +285,33 @@ function CodyTest:update()
     CodyTest.updateSparkle()
     CodyTest.checkDevil()
 
-    if rootChakraAnimation then
+    if rootChakraAnimation and rootChakra ~= nil then
         local y = rootChakraAnimation:currentValue()
         rootChakra:moveTo(rootChakra.x, y)
     end
 
-    if twoStarAnimation then
+    if twoStarAnimation and twoStar ~= nil then
         local y = twoStarAnimation:currentValue()
         twoStar:moveTo(twoStar.x, y)
     end
 
-    if threeStarAnimation then
+    if threeStarAnimation and threeStar ~= nil then
         local y = threeStarAnimation:currentValue()
         threeStar:moveTo(threeStar.x, y)
     end
 
-    if fourStarAnimation then
+    if fourStarAnimation and fourStar ~= nil then
         local y = fourStarAnimation:currentValue()
         fourStar:moveTo(fourStar.x, y)
     end
 
-    if fiveStarAnimation then
+    if fiveStarAnimation and fiveStar ~= nil then
         local y = fiveStarAnimation:currentValue()
         fiveStar:moveTo(fiveStar.x, y)
     end
 end
 
 local sparkels = {}
-sparkels["head"] = nil
 
 function onSparkleFinish(key)
     NobleScene:removeSprite(sparkels[key])
@@ -458,6 +474,36 @@ end
 function CodyTest:finish()
     CodyTest.super.finish(self)
 
+    if rootChakra ~= nil then
+        rootChakra:remove()
+        rootChakra = nil
+    end
+
+    if twoStar ~= nil then
+        twoStar:remove()
+        twoStar = nil
+    end
+
+    if threeStar ~= nil then
+        threeStar:remove()
+        threeStar = nil
+    end
+
+    if fourStar ~= nil then
+        fourStar:remove()
+        fourStar = nil
+    end
+
+    if fiveStar ~= nil then
+        fiveStar:remove()
+        fiveStar = nil
+    end
+
+    if jointSelector ~= nil then
+        jointSelector:remove()
+        jointSelector = nil
+    end
+
     currentJoint = nil
     headJoint = nil
     uBodyJoint = nil
@@ -488,7 +534,11 @@ CodyTest.inputHandler = {
     -- A button
     --
     AButtonDown = function() -- Runs once when button is pressed.
-        if not handleInput then return end
+        if not handleInput then
+            print("Reset")
+            Noble.transition(CodyTest, 1.5, Noble.TransitionType.CROSS_DISSOLVE)
+            return
+        end
         if currentJoint == confirm then
             endGame()
         end
@@ -551,8 +601,10 @@ CodyTest.inputHandler = {
     --
     cranked = function(change, acceleratedChange) -- Runs when the crank is rotated. See Playdate SDK documentation for details.
         if not handleInput then return end
-        currentJoint.rot = currentJoint.rot + change
-        currentJoint.sprite:setRotation(currentJoint.rot)
+        if currentJoint.isConfirm == false then
+            currentJoint.rot = currentJoint.rot + change
+            currentJoint.sprite:setRotation(currentJoint.rot)
+        end
 
         headJoint:updateLocation()
         uBodyJoint:updateLocation()

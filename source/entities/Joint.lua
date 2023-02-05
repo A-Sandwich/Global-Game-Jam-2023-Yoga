@@ -20,6 +20,7 @@ function Joint:init(x, y, rot, rad, parent, attachAngle, sprite)
     self.sprite = sprite
     sprite:setRotation(self.rot)
     self.id = playdate.string.UUID(32)
+    self.isConfirm = false
 end
 
 function Joint:updateLocation()
